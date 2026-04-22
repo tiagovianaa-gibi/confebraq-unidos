@@ -1,0 +1,212 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userAccessPath(userId) {
+      return /databases/$(database)/documents/panelAccess/$(userId);
+    }
+
+    function hasUserAccessProfile() {
+      return isSignedIn() && exists(userAccessPath(request.auth.uid));
+    }
+
+    function currentUserAccess() {
+      return get(userAccessPath(request.auth.uid)).data;
+    }
+
+    function isActivePanelUser() {
+      return hasUserAccessProfile() && currentUserAccess().active == true;
+    }
+
+    function isPanelAdmin() {
+      return isActivePanelUser() && currentUserAccess().role == "admin";
+    }
+
+    function isEntityUser() {
+      return isActivePanelUser() && currentUserAccess().role == "entity";
+    }
+
+    function managesEntity(entitySigla) {
+      return isPanelAdmin() ||
+        (isEntityUser() && currentUserAccess().entitySigla == entitySigla);
+    }
+
+    function isNonEmptyString(value) {
+      return value is string && value.size() > 0;
+    }
+
+    function isNonNegativeInt(value) {
+      return value is int && value >= 0;
+    }
+
+    function isValidPanelAccessProfile(data, userId) {
+      return data.keys().hasOnly([
+          "uid",
+          "email",
+          "displayName",
+          "role",
+          "entitySigla",
+          "active",
+          "updatedAt",
+        ]) &&
+        data.uid == userId &&
+        data.email is string &&
+        data.displayName is string &&
+        data.active is bool &&
+        data.updatedAt is string &&
+        (
+          data.role == "admin" ||
+          (data.role == "entity" && isNonEmptyString(data.entitySigla))
+        );
+    }
+
+    function isValidSummary(data, reportId) {
+      return data.keys().hasOnly([
+          "id",
+          "entitySigla",
+          "entityName",
+          "uf",
+          "presidentName",
+          "totalQuadrilhas",
+          "totalQuadrilheiros",
+          "updatedAt",
+        ]) &&
+        data.id == reportId &&
+        data.entitySigla == reportId &&
+        isNonEmptyString(data.entitySigla) &&
+        isNonEmptyString(data.entityName) &&
+        isNonEmptyString(data.uf) &&
+        data.presidentName is string &&
+        isNonNegativeInt(data.totalQuadrilhas) &&
+        isNonNegativeInt(data.totalQuadrilheiros) &&
+        isNonEmptyString(data.updatedAt);
+    }
+
+    function isValidPrivateReport(data, reportId) {
+      return data.keys().hasOnly([
+          "id",
+          "entitySigla",
+          "entityName",
+          "uf",
+          "presidentName",
+          "presidentEmail",
+          "quadrilhas",
+          "totalQuadrilhas",
+          "totalQuadrilheiros",
+          "updatedAt",
+        ]) &&
+        data.id == reportId &&
+        data.entitySigla == reportId &&
+        isNonEmptyString(data.entitySigla) &&
+        isNonEmptyString(data.entityName) &&
+        isNonEmptyString(data.uf) &&
+        data.presidentName is string &&
+        data.presidentEmail is string &&
+        data.quadrilhas is list &&
+        data.quadrilhas.size() > 0 &&
+        data.quadrilhas.size() <= 200 &&
+        isNonNegativeInt(data.totalQuadrilhas) &&
+        isNonNegativeInt(data.totalQuadrilheiros) &&
+        isNonEmptyString(data.updatedAt);
+    }
+
+    function isValidNewsItem(data, itemId) {
+      return data.keys().hasOnly([
+          "id",
+          "title",
+          "summary",
+          "date",
+          "category",
+          "image",
+          "imagePath",
+          "featured",
+          "sortOrder",
+          "createdAt",
+          "updatedAt",
+          "createdBy",
+        ]) &&
+        data.id == itemId &&
+        isNonEmptyString(data.title) &&
+        isNonEmptyString(data.summary) &&
+        isNonEmptyString(data.date) &&
+        isNonEmptyString(data.category) &&
+        (!data.keys().hasAny(["image"]) || data.image is string) &&
+        (!data.keys().hasAny(["imagePath"]) || data.imagePath is string) &&
+        data.featured is bool &&
+        isNonNegativeInt(data.sortOrder) &&
+        data.createdAt is string &&
+        data.updatedAt is string &&
+        data.createdBy is string;
+    }
+
+    function isValidTransparencyItem(data, itemId) {
+      return data.keys().hasOnly([
+          "id",
+          "title",
+          "description",
+          "period",
+          "status",
+          "href",
+          "hrefPath",
+          "sortOrder",
+          "createdAt",
+          "updatedAt",
+          "createdBy",
+        ]) &&
+        data.id == itemId &&
+        isNonEmptyString(data.title) &&
+        isNonEmptyString(data.description) &&
+        isNonEmptyString(data.period) &&
+        (data.status == "Disponivel" || data.status == "Em atualizacao") &&
+        (!data.keys().hasAny(["href"]) || data.href is string) &&
+        (!data.keys().hasAny(["hrefPath"]) || data.hrefPath is string) &&
+        isNonNegativeInt(data.sortOrder) &&
+        data.createdAt is string &&
+        data.updatedAt is string &&
+        data.createdBy is string;
+    }
+
+    match /panelAccess/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isPanelAdmin());
+      allow create, update: if isPanelAdmin() &&
+        isValidPanelAccessProfile(request.resource.data, userId);
+      allow delete: if isPanelAdmin();
+    }
+
+    match /entityReportSummaries/{reportId} {
+      allow read: if true;
+      allow create, update: if managesEntity(reportId) &&
+        isValidSummary(request.resource.data, reportId);
+      allow delete: if isPanelAdmin();
+    }
+
+    match /entityReports/{reportId} {
+      allow read: if isPanelAdmin() || managesEntity(resource.data.entitySigla);
+      allow create, update: if managesEntity(reportId) &&
+        isValidPrivateReport(request.resource.data, reportId);
+      allow delete: if isPanelAdmin();
+    }
+
+    match /siteNews/{itemId} {
+      allow read: if true;
+      allow create, update: if isPanelAdmin() &&
+        isValidNewsItem(request.resource.data, itemId);
+      allow delete: if isPanelAdmin();
+    }
+
+    match /siteTransparency/{itemId} {
+      allow read: if true;
+      allow create, update: if isPanelAdmin() &&
+        isValidTransparencyItem(request.resource.data, itemId);
+      allow delete: if isPanelAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

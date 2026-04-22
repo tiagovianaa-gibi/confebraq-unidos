@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function hasUserAccessProfile() {
+      return request.auth != null &&
+        firestore.exists(/databases/(default)/documents/panelAccess/$(request.auth.uid));
+    }
+
+    function currentUserAccess() {
+      return firestore.get(/databases/(default)/documents/panelAccess/$(request.auth.uid)).data;
+    }
+
+    function isPanelAdmin() {
+      return hasUserAccessProfile() &&
+        currentUserAccess().active == true &&
+        currentUserAccess().role == "admin";
+    }
+
+    match /site/{section}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isPanelAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
