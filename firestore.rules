@@ -99,6 +99,7 @@ service cloud.firestore {
           "instagram",
           "totalQuadrilhas",
           "totalQuadrilheiros",
+          "quadrilhas",
           "updatedAt",
         ]) &&
         data.id == reportId &&
@@ -110,6 +111,7 @@ service cloud.firestore {
         (!data.keys().hasAny(["instagram"]) || data.instagram is string) &&
         isNonNegativeInt(data.totalQuadrilhas) &&
         isNonNegativeInt(data.totalQuadrilheiros) &&
+        (!data.keys().hasAny(["quadrilhas"]) || data.quadrilhas is list) &&
         isNonEmptyString(data.updatedAt);
     }
 

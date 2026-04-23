@@ -127,7 +127,7 @@ const EntityRegistryPanel = ({
 
   const updateQuadrilha = (
     quadrilhaId: string,
-    field: "name" | "participants",
+    field: "name" | "participants" | "instagram",
     value: string,
   ) => {
     setFormState((current) => ({
@@ -303,7 +303,7 @@ const EntityRegistryPanel = ({
 
             <div className="space-y-3">
               {formState.quadrilhas.map((quadrilha, index) => (
-                <div key={quadrilha.id} className="rounded-lg border border-border p-4">
+                <div key={quadrilha.id} className="rounded-lg border border-border p-4 space-y-3">
                   <div className="grid md:grid-cols-[1fr_180px_auto] gap-3 items-end">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
@@ -339,6 +339,17 @@ const EntityRegistryPanel = ({
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Instagram da quadrilha</label>
+                    <Input
+                      value={quadrilha.instagram || ""}
+                      onChange={(event) =>
+                        updateQuadrilha(quadrilha.id, "instagram", event.target.value)
+                      }
+                      placeholder="https://instagram.com/quadrilha ou @quadrilha"
+                    />
                   </div>
                 </div>
               ))}

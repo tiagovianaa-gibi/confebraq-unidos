@@ -20,6 +20,7 @@ export interface QuadrilhaEntry {
   id: string;
   name: string;
   participants: number;
+  instagram?: string;
 }
 
 export interface EntityReportSummary {
@@ -28,10 +29,11 @@ export interface EntityReportSummary {
   entityName: string;
   uf: string;
   presidentName: string;
-  presidentEmail: string;
+  presidentEmail?: string;
   instagram?: string;
   totalQuadrilhas: number;
   totalQuadrilheiros: number;
+  quadrilhas: QuadrilhaEntry[];
   updatedAt: string;
 }
 
@@ -77,6 +79,7 @@ const normalizeQuadrilha = (item: Partial<QuadrilhaEntry>, index: number): Quadr
   participants: Number.isFinite(item.participants)
     ? Math.max(0, Number(item.participants))
     : 0,
+  instagram: normalizeInstagram(item.instagram) || undefined,
 });
 
 const normalizeSummary = (
@@ -104,6 +107,11 @@ const normalizeSummary = (
     totalQuadrilheiros: Number.isFinite(item.totalQuadrilheiros)
       ? Math.max(0, Number(item.totalQuadrilheiros))
       : 0,
+    quadrilhas: Array.isArray(item.quadrilhas)
+      ? item.quadrilhas
+          .map((q, i) => normalizeQuadrilha(q as Partial<QuadrilhaEntry>, i))
+          .filter((q) => q.name)
+      : [],
     updatedAt: item.updatedAt?.trim() || new Date(0).toISOString(),
   };
 };
@@ -158,6 +166,7 @@ const buildSummaryFromReport = (report: EntityReport): EntityReportSummary => ({
   instagram: report.instagram || "",
   totalQuadrilhas: report.totalQuadrilhas,
   totalQuadrilheiros: report.totalQuadrilheiros,
+  quadrilhas: report.quadrilhas,
   updatedAt: report.updatedAt,
 });
 

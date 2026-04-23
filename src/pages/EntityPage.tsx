@@ -1,12 +1,12 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, CalendarDays, Instagram, MapPinned, Users } from "lucide-react";
+import { ArrowLeft, Instagram, MapPinned, Users } from "lucide-react";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import { useEntityRegistry } from "@/hooks/useEntityRegistry";
 import { affiliateEntityBySigla } from "@/content/affiliates";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formatNumber = (value: number) => new Intl.NumberFormat("pt-BR").format(value);
 
@@ -24,9 +24,6 @@ const EntityPage = () => {
           <Card className="w-full max-w-lg">
             <CardHeader>
               <CardTitle>Entidade não encontrada</CardTitle>
-              <CardDescription>
-                A sigla informada não corresponde a uma entidade cadastrada na CONFEBRAQ.
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild>
@@ -46,7 +43,7 @@ const EntityPage = () => {
   const entitySummary =
     entityReports.find((report) => report.entitySigla === entity.sigla) || null;
   const instagramUrl = entitySummary?.instagram || entity.instagram || "";
-  const hasPublishedData = Boolean(entitySummary);
+  const quadrilhas = entitySummary?.quadrilhas ?? [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/30 to-background">
@@ -70,15 +67,8 @@ const EntityPage = () => {
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary">{entity.uf}</Badge>
                     <Badge variant="secondary">{entity.sigla}</Badge>
-                    {hasPublishedData && (
-                      <Badge variant="secondary">Dados enviados pelo painel</Badge>
-                    )}
                   </div>
                   <CardTitle className="font-display text-3xl">{entity.entity}</CardTitle>
-                  <CardDescription className="max-w-2xl text-primary-foreground/80">
-                    Página pública da entidade estadual com os dados enviados pelo presidente no
-                    painel da CONFEBRAQ.
-                  </CardDescription>
                 </div>
 
                 {instagramUrl ? (
@@ -93,7 +83,7 @@ const EntityPage = () => {
             </CardHeader>
 
             <CardContent className="space-y-6 p-6">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="rounded-xl border border-border bg-card p-5">
                   <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <MapPinned className="w-4 h-4" />
@@ -113,70 +103,40 @@ const EntityPage = () => {
                     {formatNumber(entitySummary?.totalQuadrilheiros || 0)}
                   </div>
                 </div>
-
-                <div className="rounded-xl border border-border bg-card p-5">
-                  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <CalendarDays className="w-4 h-4" />
-                    Última atualização
-                  </div>
-                  <div className="mt-3 text-lg font-semibold text-foreground">
-                    {entitySummary?.updatedAt
-                      ? new Date(entitySummary.updatedAt).toLocaleDateString("pt-BR")
-                      : "Aguardando envio"}
-                  </div>
-                </div>
               </div>
 
-              {hasPublishedData ? (
-                <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
-                  <div className="rounded-xl border border-border bg-card p-5">
-                    <div className="text-sm font-medium text-muted-foreground">
-                      Informações públicas
-                    </div>
-                    <div className="mt-4 space-y-3 text-sm">
-                      <div>
-                        <div className="text-muted-foreground">Responsável pelo cadastro</div>
-                        <div className="font-medium text-foreground">
-                          {entitySummary?.presidentName || "Não informado"}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">Instagram</div>
-                        <div className="font-medium text-foreground">
-                          {instagramUrl ? (
-                            <a
-                              href={instagramUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary underline-offset-4 hover:underline"
-                            >
-                              {instagramUrl}
-                            </a>
-                          ) : (
-                            "Não informado"
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-junina-yellow/30 bg-junina-yellow/10 p-5">
-                    <div className="text-sm font-medium text-foreground">
-                      Resumo enviado pela entidade
-                    </div>
-                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                      Esses números são atualizados no painel da CONFEBRAQ pelo presidente da
-                      entidade estadual.
-                    </p>
-                  </div>
+              {quadrilhas.length > 0 ? (
+                <div className="rounded-xl border border-border bg-card p-5">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">
+                    Quadrilhas filiadas
+                  </h3>
+                  <ul className="space-y-3">
+                    {quadrilhas.map((quadrilha) => (
+                      <li
+                        key={quadrilha.id}
+                        className="flex items-center justify-between gap-4 rounded-lg border border-border px-4 py-3"
+                      >
+                        <span className="font-medium text-foreground">{quadrilha.name}</span>
+                        {quadrilha.instagram && (
+                          <a
+                            href={quadrilha.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline shrink-0"
+                          >
+                            <Instagram className="w-3.5 h-3.5" />
+                            Instagram
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ) : (
-                <div className="rounded-xl border border-dashed border-border bg-muted/40 p-5 text-sm leading-relaxed text-muted-foreground">
-                  Esta entidade ainda não publicou seus dados no painel. Assim que o presidente
-                  enviar as informações da entidade, esta página passará a mostrar Instagram,
-                  quantidade de quadrilhas e quantidade de quadrilheiros.
+              ) : !entitySummary ? (
+                <div className="rounded-xl border border-dashed border-border bg-muted/40 p-5 text-sm text-muted-foreground">
+                  Esta entidade ainda não enviou seus dados.
                 </div>
-              )}
+              ) : null}
             </CardContent>
           </Card>
         </div>
