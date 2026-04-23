@@ -85,6 +85,31 @@ const sanitizeFileName = (fileName: string) =>
     .replace(/^-|-$/g, "")
     .toLowerCase();
 
+const normalizeNewsImageUrl = (value: string) => {
+  const trimmedValue = value.trim();
+  if (!trimmedValue) {
+    return undefined;
+  }
+
+  if (/^https?:\/\//i.test(trimmedValue) || /^\/\//.test(trimmedValue)) {
+    return trimmedValue;
+  }
+
+  if (trimmedValue.startsWith("/")) {
+    return trimmedValue;
+  }
+
+  if (/^noticias\//i.test(trimmedValue)) {
+    return `/${trimmedValue}`;
+  }
+
+  if (/^[\w\-]+\.[a-zA-Z0-9]+$/.test(trimmedValue)) {
+    return `/noticias/${trimmedValue}`;
+  }
+
+  return trimmedValue;
+};
+
 const uploadSiteFile = async (
   folder: "news" | "transparency",
   ownerId: string,
@@ -198,7 +223,7 @@ const PanelWorkspace = ({
       ? newsItems.find((item) => item.id === editingNewsId) ?? null
       : null;
 
-    let nextImageUrl = newsForm.image.trim() || undefined;
+    let nextImageUrl = normalizeNewsImageUrl(newsForm.image) || undefined;
     let nextImagePath = nextImageUrl ? undefined : currentItem?.imagePath;
 
     try {
@@ -620,7 +645,7 @@ const PanelWorkspace = ({
               <CardHeader>
                 <CardTitle>{editingNewsId ? "Editar notícia" : "Nova notícia"}</CardTitle>
                 <CardDescription>
-                  Cadastre notícias para a home e envie uma foto para o Firebase Storage, se quiser.
+                  Cadastre notícias para a home usando o caminho absoluto da imagem armazenada em <span className="font-semibold">/noticias</span>.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -667,14 +692,14 @@ const PanelWorkspace = ({
                   <div className="space-y-2">
                     <label className="text-sm font-medium">URL ou caminho da imagem</label>
                     <Input
-                      placeholder="/noticias/exemplo.png"
+                      placeholder="/noticias/anej.png"
                       value={newsForm.image}
                       onChange={(event) => setNewsForm({ ...newsForm, image: event.target.value })}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Coloque aqui o caminho da imagem que será commitada no repo, por exemplo
-                      <span className="font-mono">/noticias/arquivo.png</span>. Não é necessário
-                      enviar a imagem pelo painel.
+                      Coloque aqui o caminho completo da imagem em <span className="font-mono">/noticias</span>,
+                      por exemplo <span className="font-mono">/noticias/anej.png</span>. Se digitar apenas
+                      <span className="font-mono">anej.png</span>, ele será convertido automaticamente.
                     </p>
                   </div>
 
