@@ -1,5 +1,3 @@
-import heroImage from "@/assets/eita-junino-2025.jpg";
-
 export interface NewsItem {
   id: string;
   title: string;
@@ -37,7 +35,7 @@ export const defaultNewsItems: NewsItem[] = [
       "A CONFEBRAQ segue articulando critérios técnicos, cronograma e alinhamento com as entidades filiadas para fortalecer a organização do circuito nacional.",
     date: "2026-03-18",
     category: "Institucional",
-    image: heroImage,
+    image: "/noticias/anej.png",
     featured: true,
     sortOrder: 0,
   },
