@@ -83,6 +83,11 @@ export function repairMojibakeText(value?: string) {
   return repairedValue;
 }
 
+const ensureTransparencyPdfExtension = (path: string) =>
+  /^\/transparencia\//i.test(path) && !/\.[a-zA-Z0-9]{2,5}$/.test(path.split("?")[0])
+    ? `${path}.pdf`
+    : path;
+
 function extractHostedPublicPath(value: string) {
   const normalizedValue = value.trim().replace(/\\/g, "/");
   const withoutOrigin = normalizedValue.replace(/^https?:\/\/[^/]+/i, "");
@@ -140,7 +145,7 @@ export function normalizePublicAssetUrl(
 
   const hostedPublicPath = extractHostedPublicPath(trimmedValue);
   if (hostedPublicPath) {
-    return hostedPublicPath;
+    return ensureTransparencyPdfExtension(hostedPublicPath);
   }
 
   if (
@@ -155,12 +160,12 @@ export function normalizePublicAssetUrl(
   }
 
   if (trimmedValue.startsWith("/")) {
-    return trimmedValue;
+    return ensureTransparencyPdfExtension(trimmedValue);
   }
 
   const normalizedPath = trimmedValue.replace(/^\/+|\/+$/g, "").replace(/\\/g, "/");
   if (/^(?:noticias|transparencia)\//i.test(normalizedPath)) {
-    return `/${normalizedPath}`;
+    return ensureTransparencyPdfExtension(`/${normalizedPath}`);
   }
 
   return `/${defaultFolder}/${normalizedPath}`;
