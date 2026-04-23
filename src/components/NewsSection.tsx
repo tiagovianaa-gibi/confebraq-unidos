@@ -68,7 +68,7 @@ const NewsSection = () => {
                     </Link>
                   </h3>
 
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  <p className={`text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4 ${item.featured ? "sm:line-clamp-5" : ""}`}>
                     {item.summary}
                   </p>
 
