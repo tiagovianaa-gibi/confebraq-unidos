@@ -1,7 +1,15 @@
 import heroBg from "@/assets/eita-junino-2025.jpg";
 import logo from "@/assets/confebraq-logo.png";
+import { repairMojibakeText } from "@/lib/utils";
 
 const HeroSection = () => {
+  const subtitle = repairMojibakeText(
+    "Confederação Brasileira de Entidades de Quadrilhas Juninas",
+  );
+  const description = repairMojibakeText("Unindo o Brasil através do movimento junino desde 2005.");
+  const aboutLabel = repairMojibakeText("Conheça a CONFEBRAQ");
+  const championsLabel = repairMojibakeText("Hall dos campeões");
+
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
@@ -25,10 +33,10 @@ const HeroSection = () => {
           CONFEBRAQ
         </h1>
         <p className="text-lg sm:text-xl lg:text-2xl text-secondary font-display font-semibold mb-4">
-          Confederação Brasileira de Entidades de Quadrilhas Juninas
+          {subtitle}
         </p>
         <p className="text-primary-foreground/80 text-base sm:text-lg max-w-2xl mx-auto mb-10 font-light">
-          Unindo o Brasil através do movimento junino desde 2005.
+          {description}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -36,13 +44,13 @@ const HeroSection = () => {
             href="#sobre"
             className="px-8 py-3.5 rounded-lg gradient-warm text-primary font-semibold text-sm uppercase tracking-wider shadow-lg hover:shadow-xl transition-all hover:scale-105"
           >
-            Conheça a CONFEBRAQ
+            {aboutLabel}
           </a>
           <a
             href="#campeoes"
             className="px-8 py-3.5 rounded-lg border-2 border-primary-foreground/30 text-primary-foreground font-semibold text-sm uppercase tracking-wider hover:bg-primary-foreground/10 transition-all"
           >
-            Hall dos campeões
+            {championsLabel}
           </a>
         </div>
       </div>

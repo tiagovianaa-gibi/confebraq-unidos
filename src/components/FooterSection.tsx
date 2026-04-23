@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import logo from "@/assets/confebraq-logo.png";
 import { Button } from "@/components/ui/button";
+import { repairMojibakeText } from "@/lib/utils";
 
 const quickLinks = [
   { label: "Início", href: "/#inicio" },
@@ -14,6 +15,18 @@ const quickLinks = [
 ];
 
 const FooterSection = () => {
+  const normalizedQuickLinks = quickLinks.map((link) => ({
+    ...link,
+    label: repairMojibakeText(link.label),
+  }));
+  const description = repairMojibakeText(
+    "Confederação Brasileira de Entidades de Quadrilhas Juninas. Unindo o Brasil pelo movimento junino.",
+  );
+  const quickLinksTitle = repairMojibakeText("Links rápidos");
+  const contactDescription = repairMojibakeText(
+    "Para mais informações sobre filiação, campeonatos e eventos, entre em contato com a CONFEBRAQ através das nossas redes sociais ou diretamente com a sua entidade estadual filiada.",
+  );
+
   return (
     <footer id="contato" className="gradient-junina text-primary-foreground">
       <div className="mx-auto max-w-7xl section-padding">
@@ -24,15 +37,14 @@ const FooterSection = () => {
               <span className="font-display text-xl font-bold">CONFEBRAQ</span>
             </div>
             <p className="text-sm leading-relaxed text-primary-foreground/70">
-              Confederação Brasileira de Entidades de Quadrilhas Juninas. Unindo o Brasil pelo
-              movimento junino.
+              {description}
             </p>
           </div>
 
           <div>
-            <h3 className="mb-4 font-display text-lg font-bold">Links rápidos</h3>
+            <h3 className="mb-4 font-display text-lg font-bold">{quickLinksTitle}</h3>
             <nav className="flex flex-col gap-2">
-              {quickLinks.map((link) => (
+              {normalizedQuickLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
@@ -47,9 +59,7 @@ const FooterSection = () => {
           <div>
             <h3 className="mb-4 font-display text-lg font-bold">Contato</h3>
             <p className="mb-5 text-sm leading-relaxed text-primary-foreground/70">
-              Para mais informações sobre filiação, campeonatos e eventos, entre em contato com a
-              CONFEBRAQ através das nossas redes sociais ou diretamente com a sua entidade estadual
-              filiada.
+              {contactDescription}
             </p>
 
             <Button asChild variant="secondary">

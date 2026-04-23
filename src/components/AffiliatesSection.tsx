@@ -1,5 +1,6 @@
 import mapaBr from "@/assets/mapa-br.svg";
 import { affiliateEntities } from "@/content/affiliates";
+import { repairMojibakeText } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const regionColors: Record<string, string> = {
@@ -10,6 +11,8 @@ const regionColors: Record<string, string> = {
 };
 
 const AffiliatesSection = () => {
+  const mapCaption = repairMojibakeText("Presença da CONFEBRAQ no Brasil");
+
   return (
     <section id="filiadas" className="section-padding bg-muted">
       <div className="max-w-7xl mx-auto">
@@ -27,7 +30,7 @@ const AffiliatesSection = () => {
         <div className="grid lg:grid-cols-[300px_1fr] gap-10 items-start mb-8">
           <div className="hidden lg:flex flex-col items-center sticky top-28">
             <img src={mapaBr} alt="Mapa do Brasil" className="w-full max-w-[280px] opacity-80" />
-            <p className="text-xs text-muted-foreground mt-4 text-center">Presença da CONFEBRAQ no Brasil</p>
+            <p className="text-xs text-muted-foreground mt-4 text-center">{mapCaption}</p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">

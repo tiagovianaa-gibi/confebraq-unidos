@@ -1,3 +1,5 @@
+import { repairMojibakeText } from "@/lib/utils";
+
 export interface AffiliateEntity {
   num: string;
   entity: string;
@@ -6,7 +8,7 @@ export interface AffiliateEntity {
   instagram?: string;
 }
 
-export const affiliateEntities: AffiliateEntity[] = [
+const rawAffiliateEntities: AffiliateEntity[] = [
   { num: "01", entity: "Liga de Quadrilhas Juninas do Acre", sigla: "LIQUAJAC", uf: "AC", instagram: "https://instagram.com/liquajac" },
   { num: "02", entity: "Liga de Quadrilhas Juninas de Alagoas", sigla: "LIQAL", uf: "AL", instagram: "https://instagram.com/liqal" },
   { num: "03", entity: "Liga das Quadrilhas Juninas do Amazonas", sigla: "LIQUAJUAM", uf: "AM", instagram: "https://instagram.com/liquajuam" },
@@ -30,6 +32,11 @@ export const affiliateEntities: AffiliateEntity[] = [
   { num: "21", entity: "Federação de Quadrilhas Juninas do Tocantins", sigla: "FEQUAJUNTO", uf: "TO", instagram: "https://instagram.com/fequajunto" },
   { num: "22", entity: "União das Quadrilhas Juninas do Estado do Espírito Santo", sigla: "UQJES", uf: "ES", instagram: "https://instagram.com/uqjes" },
 ];
+
+export const affiliateEntities: AffiliateEntity[] = rawAffiliateEntities.map((entity) => ({
+  ...entity,
+  entity: repairMojibakeText(entity.entity),
+}));
 
 export const affiliateEntityBySigla = Object.fromEntries(
   affiliateEntities.map((entity) => [entity.sigla, entity]),

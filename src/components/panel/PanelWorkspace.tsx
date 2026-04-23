@@ -294,7 +294,8 @@ const PanelWorkspace = ({
       : null;
 
     let uploadedFilePath: string | undefined;
-    let nextHref = transparencyForm.href.trim() || undefined;
+    let nextHref =
+      normalizePublicAssetUrl(transparencyForm.href.trim(), "transparencia") || undefined;
     let nextHrefPath = currentItem?.hrefPath;
 
     try {
