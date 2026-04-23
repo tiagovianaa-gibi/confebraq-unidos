@@ -47,7 +47,7 @@ const EntityRegistryPanel = ({
   userRole,
   assignedEntitySigla,
 }: EntityRegistryPanelProps) => {
-  const initialEntitySigla = userRole === "presidente" ? assignedEntitySigla || "" : "";
+  const initialEntitySigla = userRole === "entity" ? assignedEntitySigla || "" : "";
   const [selectedEntitySigla, setSelectedEntitySigla] = useState(initialEntitySigla);
   const { entityReports, metrics, loading, error, saveEntityReport, myEntityReport, targetEntitySigla } =
     useEntityRegistry({
@@ -189,7 +189,7 @@ const EntityRegistryPanel = ({
 
       toast({
         title: "Cadastro da entidade salvo",
-        description: "Os totais da pagina inicial ja foram recalculados com este envio.",
+        description: "Os totais da página inicial já foram recalculados com este envio.",
       });
     } catch (saveError) {
       toast({
@@ -197,7 +197,7 @@ const EntityRegistryPanel = ({
         description:
           saveError instanceof Error
             ? saveError.message
-            : "Nao foi possivel salvar os dados da entidade.",
+            : "Não foi possível salvar os dados da entidade.",
         variant: "destructive",
       });
     }
@@ -210,8 +210,8 @@ const EntityRegistryPanel = ({
           <CardTitle>Cadastro da entidade estadual</CardTitle>
           <CardDescription>
             {isAdmin
-              ? "Como administrador, voce pode revisar e atualizar qualquer entidade estadual."
-              : "Seu usuario so pode atualizar a propria entidade, as quadrilhas filiadas e o total de quadrilheiros."}
+              ? "Como administrador, você pode revisar e atualizar qualquer entidade estadual."
+              : "Seu usuário só pode atualizar a própria entidade, as quadrilhas filiadas e o total de quadrilheiros."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -247,7 +247,7 @@ const EntityRegistryPanel = ({
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Responsavel pelo cadastro</label>
+                <label className="text-sm font-medium">Responsável pelo cadastro</label>
                 <Input
                   value={formState.presidentName}
                   onChange={(event) =>
@@ -256,14 +256,14 @@ const EntityRegistryPanel = ({
                       presidentName: event.target.value,
                     }))
                   }
-                  placeholder="Nome do responsavel"
+                  placeholder="Nome do responsável"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">E-mail do responsavel</label>
+              <label className="text-sm font-medium">E-mail do responsável</label>
               <Input
                 type="email"
                 value={formState.presidentEmail}
@@ -279,7 +279,7 @@ const EntityRegistryPanel = ({
               />
               {userRole !== "admin" && (
                 <p className="text-xs text-muted-foreground">
-                  Apenas administradores da CONFEBRAQ podem alterar o e-mail de responsavel.
+                  Apenas administradores da CONFEBRAQ podem alterar o e-mail do responsável.
                 </p>
               )}
             </div>
@@ -294,8 +294,11 @@ const EntityRegistryPanel = ({
                     instagram: event.target.value,
                   }))
                 }
-                placeholder="https://instagram.com/entidade"
+                placeholder="https://instagram.com/entidade ou @entidade"
               />
+              <p className="text-xs text-muted-foreground">
+                Esse link aparece na página pública da entidade.
+              </p>
             </div>
 
             <div className="space-y-3">
@@ -311,7 +314,7 @@ const EntityRegistryPanel = ({
                         onChange={(event) =>
                           updateQuadrilha(quadrilha.id, "name", event.target.value)
                         }
-                        placeholder="Ex.: Arraia Unidos do Sertao"
+                        placeholder="Ex.: Arraiá Unidos do Sertão"
                       />
                     </div>
 
@@ -356,7 +359,7 @@ const EntityRegistryPanel = ({
               </Button>
               {myEntityReport?.updatedAt && (
                 <span className="text-sm text-muted-foreground self-center">
-                  Ultima atualizacao: {new Date(myEntityReport.updatedAt).toLocaleString("pt-BR")}
+                  Última atualização: {new Date(myEntityReport.updatedAt).toLocaleString("pt-BR")}
                 </span>
               )}
             </div>
@@ -369,7 +372,7 @@ const EntityRegistryPanel = ({
           <CardHeader>
             <CardTitle>Totais consolidados</CardTitle>
             <CardDescription>
-              Esses numeros alimentam os destaques da pagina inicial.
+              Esses números alimentam os destaques da página inicial.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -449,16 +452,16 @@ const EntityRegistryPanel = ({
                         </div>
                         <h3 className="font-semibold text-foreground">{report.entityName}</h3>
                         <p className="text-sm text-muted-foreground">
-                          Responsavel: {report.presidentName || "Nao informado"}
+                          Responsável: {report.presidentName || "Não informado"}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          E-mail: {report.presidentEmail || "Nao informado"}
+                          E-mail: {report.presidentEmail || "Não informado"}
                         </p>
                       </div>
 
                       {isCurrentEntity && (
                         <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                          {isAdmin ? "Em edicao" : "Sua entidade"}
+                          {isAdmin ? "Em edição" : "Sua entidade"}
                         </span>
                       )}
                     </div>

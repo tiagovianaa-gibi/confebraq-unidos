@@ -6,6 +6,11 @@ const statusClassName: Record<string, string> = {
   "Em atualizacao": "bg-junina-yellow/20 text-primary border border-junina-yellow/30",
 };
 
+const statusLabel: Record<string, string> = {
+  Disponivel: "Disponível",
+  "Em atualizacao": "Em atualização",
+};
+
 const TransparencySection = () => {
   const { transparencyItems } = useSiteContent();
 
@@ -14,13 +19,13 @@ const TransparencySection = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-secondary font-semibold text-sm uppercase tracking-widest">
-            Prestacao de contas
+            Prestação de contas
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground mt-3 mb-6">
-            Transparencia
+            Transparência
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Documentos e avisos publicados pelo painel do site e organizados em uma area unica.
+            Documentos e avisos publicados pelo painel do site e organizados em uma área única.
           </p>
           <div className="w-24 h-1 gradient-warm mx-auto rounded-full mt-6" />
         </div>
@@ -35,7 +40,7 @@ const TransparencySection = () => {
                       <FileText className="w-6 h-6" />
                     </div>
                     <span className={`text-xs font-semibold px-3 py-1 rounded-full ${statusClassName[item.status]}`}>
-                      {item.status}
+                      {statusLabel[item.status] || item.status}
                     </span>
                   </div>
 
@@ -46,7 +51,7 @@ const TransparencySection = () => {
                   </div>
 
                   <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                    {item.href ? "Abrir arquivo" : "Arquivo em preparacao"}
+                    {item.href ? "Abrir arquivo" : "Arquivo em preparação"}
                     <ExternalLink className="w-4 h-4" />
                   </div>
                 </>
@@ -80,7 +85,7 @@ const TransparencySection = () => {
           <div className="bg-card rounded-xl border border-border p-10 text-center">
             <FileText className="w-12 h-12 mx-auto text-muted-foreground/40 mb-4" />
             <p className="text-muted-foreground">
-              Nenhum item de transparencia cadastrado no painel do site.
+              Nenhum item de transparência cadastrado no painel do site.
             </p>
           </div>
         )}

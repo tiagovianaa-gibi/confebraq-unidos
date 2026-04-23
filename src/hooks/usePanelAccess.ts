@@ -3,11 +3,8 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
-  query,
   setDoc,
-  where,
 } from "firebase/firestore";
 import { db } from "@/integrations/firebase/client";
 import type { PanelAccessProfile } from "@/hooks/useFirebasePanelAuth";
@@ -23,8 +20,13 @@ const normalizePanelAccessProfile = (
   uid: item.uid?.trim() || "",
   email: item.email?.trim().toLowerCase() || "",
   displayName: item.displayName?.trim() || "",
-  role: item.role === "admin" || item.role === "presidente" ? item.role : "presidente",
-  entitySigla: item.entitySigla?.trim().toUpperCase(),
+  role: item.role === "admin" || item.role === "entity" || item.role === "presidente"
+    ? (item.role === "presidente" ? "entity" : item.role)
+    : "entity",
+  entitySigla:
+    (item.role === "entity" || item.role === "presidente")
+      ? item.entitySigla?.trim().toUpperCase()
+      : undefined,
   active: item.active === true,
   updatedAt: item.updatedAt?.trim() || new Date().toISOString(),
 });
@@ -66,12 +68,17 @@ const makeDocId = (profile: Partial<PanelAccessProfile>) => {
     return profile.id;
   }
 
+  const email = profile.email?.trim().toLowerCase();
+
+  if (email) {
+    return email;
+  }
+
   if (profile.uid) {
     return profile.uid.trim();
   }
 
-  const email = profile.email?.trim().toLowerCase() || "unknown";
-  return email.replace(/[^a-z0-9]/g, "_");
+  return "unknown";
 };
 
 export const usePanelAccess = () => {
@@ -87,9 +94,8 @@ export const usePanelAccess = () => {
 
     setLoading(true);
 
-    const accessQuery = query(collection(db, PANEL_ACCESS_COLLECTION));
     const unsubscribe = onSnapshot(
-      accessQuery,
+      collection(db, PANEL_ACCESS_COLLECTION),
       (snapshot) => {
         const nextProfiles = snapshot.docs
           .map((docItem) =>
@@ -104,16 +110,26 @@ export const usePanelAccess = () => {
       (snapshotError) => {
         console.error("Falha ao ler acessos do painel:", snapshotError);
         setProfiles(readLocalPanelAccess());
-        setError("Nao foi possivel sincronizar os acessos do painel no Firestore.");
+        setError("Não foi possível sincronizar os acessos do painel no Firestore.");
         setLoading(false);
       },
-    );n
+    );
+
     return () => unsubscribe();
   }, []);
 
   const savePanelAccess = async (profile: Partial<PanelAccessProfile>) => {
     const normalized: PanelAccessProfile = normalizePanelAccessProfile(profile, makeDocId(profile));
     const nextProfiles = [normalized, ...profiles.filter((item) => item.id !== normalized.id)];
+    const firestorePayload = {
+      uid: normalized.uid,
+      email: normalized.email,
+      displayName: normalized.displayName,
+      role: normalized.role,
+      ...(normalized.entitySigla ? { entitySigla: normalized.entitySigla } : {}),
+      active: normalized.active,
+      updatedAt: normalized.updatedAt,
+    };
 
     if (!db) {
       writeLocalPanelAccess(nextProfiles);
@@ -121,7 +137,7 @@ export const usePanelAccess = () => {
       return normalized;
     }
 
-    await setDoc(doc(db, PANEL_ACCESS_COLLECTION, normalized.id), normalized, {
+    await setDoc(doc(db, PANEL_ACCESS_COLLECTION, normalized.id), firestorePayload, {
       merge: true,
     });
 

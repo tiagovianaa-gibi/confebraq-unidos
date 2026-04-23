@@ -71,6 +71,11 @@ const createEmptyTransparencyForm = (): TransparencyFormState => ({
   href: "",
 });
 
+const transparencyStatusLabel: Record<TransparencyItem["status"], string> = {
+  Disponivel: "Disponível",
+  "Em atualizacao": "Em atualização",
+};
+
 const sanitizeFileName = (fileName: string) =>
   fileName
     .normalize("NFD")
@@ -86,7 +91,7 @@ const uploadSiteFile = async (
   file: File,
 ) => {
   if (!storage) {
-    throw new Error("O Firebase Storage nao esta configurado neste projeto.");
+    throw new Error("O Firebase Storage não está configurado neste projeto.");
   }
 
   const safeFileName = sanitizeFileName(file.name || "arquivo");
@@ -189,7 +194,7 @@ const PanelWorkspace = ({
     if (!isAdmin) {
       toast({
         title: "Acesso restrito",
-        description: "Somente administradores da CONFEBRAQ podem editar noticias.",
+        description: "Somente administradores da CONFEBRAQ podem editar notícias.",
         variant: "destructive",
       });
       return;
@@ -245,11 +250,11 @@ const PanelWorkspace = ({
 
       resetNewsForm();
       toast({
-        title: editingNewsId ? "Noticia atualizada" : "Noticia criada",
+        title: editingNewsId ? "Notícia atualizada" : "Notícia criada",
         description:
           source === "firebase"
-            ? "O conteudo ja esta sincronizado no Firebase."
-            : "O conteudo foi salvo neste navegador.",
+            ? "O conteúdo já está sincronizado no Firebase."
+            : "O conteúdo foi salvo neste navegador.",
       });
     } catch (saveError) {
       if (uploadedImagePath && uploadedImagePath !== currentItem?.imagePath) {
@@ -257,11 +262,11 @@ const PanelWorkspace = ({
       }
 
       toast({
-        title: "Falha ao salvar noticia",
+        title: "Falha ao salvar notícia",
         description:
           saveError instanceof Error
             ? saveError.message
-            : "Nao foi possivel salvar a noticia.",
+            : "Não foi possível salvar a notícia.",
         variant: "destructive",
       });
     } finally {
@@ -275,7 +280,7 @@ const PanelWorkspace = ({
     if (!isAdmin) {
       toast({
         title: "Acesso restrito",
-        description: "Somente administradores da CONFEBRAQ podem editar a transparencia.",
+        description: "Somente administradores da CONFEBRAQ podem editar a transparência.",
         variant: "destructive",
       });
       return;
@@ -329,7 +334,7 @@ const PanelWorkspace = ({
         title: editingTransparencyId ? "Item atualizado" : "Item criado",
         description:
           source === "firebase"
-            ? "A area de transparencia ja esta sincronizada no Firebase."
+            ? "A área de transparência já está sincronizada no Firebase."
             : "O item foi salvo neste navegador.",
       });
     } catch (saveError) {
@@ -342,7 +347,7 @@ const PanelWorkspace = ({
         description:
           saveError instanceof Error
             ? saveError.message
-            : "Nao foi possivel salvar o item de transparencia.",
+            : "Não foi possível salvar o item de transparência.",
         variant: "destructive",
       });
     } finally {
@@ -398,19 +403,19 @@ const PanelWorkspace = ({
       }
 
       toast({
-        title: "Noticia removida",
+        title: "Notícia removida",
         description:
           source === "firebase"
-            ? "O item foi excluido do Firebase."
-            : "O item foi excluido deste navegador.",
+            ? "O item foi excluído do Firebase."
+            : "O item foi excluído deste navegador.",
       });
     } catch (deleteError) {
       toast({
-        title: "Falha ao remover noticia",
+        title: "Falha ao remover notícia",
         description:
           deleteError instanceof Error
             ? deleteError.message
-            : "Nao foi possivel excluir a noticia.",
+            : "Não foi possível excluir a notícia.",
         variant: "destructive",
       });
     }
@@ -438,8 +443,8 @@ const PanelWorkspace = ({
         title: "Item removido",
         description:
           source === "firebase"
-            ? "O item foi excluido do Firebase."
-            : "O item foi excluido deste navegador.",
+            ? "O item foi excluído do Firebase."
+            : "O item foi excluído deste navegador.",
       });
     } catch (deleteError) {
       toast({
@@ -447,7 +452,7 @@ const PanelWorkspace = ({
         description:
           deleteError instanceof Error
             ? deleteError.message
-            : "Nao foi possivel excluir o item de transparencia.",
+            : "Não foi possível excluir o item de transparência.",
         variant: "destructive",
       });
     }
@@ -475,19 +480,19 @@ const PanelWorkspace = ({
       resetNewsForm();
       resetTransparencyForm();
       toast({
-        title: "Conteudo editorial restaurado",
+        title: "Conteúdo editorial restaurado",
         description:
           source === "firebase"
-            ? "Noticias e transparencia voltaram ao padrao no Firebase."
-            : "Noticias e transparencia voltaram ao padrao neste navegador.",
+            ? "Notícias e transparência voltaram ao padrão no Firebase."
+            : "Notícias e transparência voltaram ao padrão neste navegador.",
       });
     } catch (restoreError) {
       toast({
-        title: "Falha ao restaurar padrao",
+        title: "Falha ao restaurar padrão",
         description:
           restoreError instanceof Error
             ? restoreError.message
-            : "Nao foi possivel restaurar o conteudo editorial.",
+            : "Não foi possível restaurar o conteúdo editorial.",
         variant: "destructive",
       });
     } finally {
@@ -531,7 +536,7 @@ const PanelWorkspace = ({
                   ) : (
                     <RotateCcw className="w-4 h-4" />
                   )}
-                  Restaurar padrao
+                  Restaurar padrão
                 </Button>
               )}
               <Button
@@ -559,15 +564,15 @@ const PanelWorkspace = ({
             {isAdmin
               ? (
                 <>
-                  Voce esta com perfil de administrador. Noticias e Transparencia usam
+                  Você está com perfil de administrador. Notícias e Transparência usam
                   {" "}<span className="font-semibold">{sourceLabel}</span>, e os acessos e entidades seguem no Firestore.
                 </>
               )
               : (
                 <>
-                  Voce esta com perfil de entidade
+                  Você está com perfil de entidade
                   {assignedEntitySigla ? <> para <span className="font-semibold">{assignedEntitySigla}</span></> : null}.
-                  Seu acesso fica restrito ao cadastro da propria entidade estadual.
+                  Seu acesso fica restrito ao cadastro da própria entidade estadual.
                 </>
               )}
           </p>
@@ -578,7 +583,7 @@ const PanelWorkspace = ({
             {loading && (
               <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground flex items-center gap-3">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Sincronizando conteudo editorial...
+                Sincronizando conteúdo editorial...
               </div>
             )}
 
@@ -594,14 +599,14 @@ const PanelWorkspace = ({
           <div className="flex flex-wrap gap-3">
             <Button variant={activeTab === "news" ? "default" : "outline"} onClick={() => setActiveTab("news")}>
               <Newspaper className="w-4 h-4" />
-              Noticias
+              Notícias
             </Button>
             <Button
               variant={activeTab === "transparency" ? "default" : "outline"}
               onClick={() => setActiveTab("transparency")}
             >
               <FileText className="w-4 h-4" />
-              Transparencia
+              Transparência
             </Button>
             <Button
               variant={activeTab === "entityRegistry" ? "default" : "outline"}
@@ -633,15 +638,15 @@ const PanelWorkspace = ({
           <div className="grid xl:grid-cols-[1.1fr_0.9fr] gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>{editingNewsId ? "Editar noticia" : "Nova noticia"}</CardTitle>
+                <CardTitle>{editingNewsId ? "Editar notícia" : "Nova notícia"}</CardTitle>
                 <CardDescription>
-                  Cadastre noticias para a home e envie uma foto para o Firebase Storage, se quiser.
+                  Cadastre notícias para a home e envie uma foto para o Firebase Storage, se quiser.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSaveNews} className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Titulo</label>
+                    <label className="text-sm font-medium">Título</label>
                     <Input
                       value={newsForm.title}
                       onChange={(event) => setNewsForm({ ...newsForm, title: event.target.value })}
@@ -701,7 +706,7 @@ const PanelWorkspace = ({
                       <Upload className="w-3.5 h-3.5" />
                       {newsImageFile
                         ? `Arquivo selecionado: ${newsImageFile.name}`
-                        : "Se voce enviar um arquivo, ele substitui a URL acima."}
+                        : "Se você enviar um arquivo, ele substitui a URL acima."}
                     </p>
                   </div>
 
@@ -712,7 +717,7 @@ const PanelWorkspace = ({
                       onChange={(event) => setNewsForm({ ...newsForm, featured: event.target.checked })}
                       className="h-4 w-4 rounded border-input"
                     />
-                    Destacar esta noticia na grade principal
+                    Destacar esta notícia na grade principal
                   </label>
 
                   <div className="flex flex-wrap gap-3">
@@ -722,10 +727,10 @@ const PanelWorkspace = ({
                       ) : (
                         <Save className="w-4 h-4" />
                       )}
-                      {editingNewsId ? "Salvar alteracoes" : "Adicionar noticia"}
+                      {editingNewsId ? "Salvar alterações" : "Adicionar notícia"}
                     </Button>
                     <Button type="button" variant="outline" onClick={resetNewsForm} disabled={savingNews}>
-                      Limpar formulario
+                      Limpar formulário
                     </Button>
                   </div>
                 </form>
@@ -734,7 +739,7 @@ const PanelWorkspace = ({
 
             <Card>
               <CardHeader>
-                <CardTitle>Noticias cadastradas</CardTitle>
+                <CardTitle>Notícias cadastradas</CardTitle>
                 <CardDescription>
                   {newsItems.length} item(ns) sincronizado(s) em {sourceLabel}.
                 </CardDescription>
@@ -786,15 +791,15 @@ const PanelWorkspace = ({
           <div className="grid xl:grid-cols-[1.1fr_0.9fr] gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>{editingTransparencyId ? "Editar item" : "Novo item de transparencia"}</CardTitle>
+                <CardTitle>{editingTransparencyId ? "Editar item" : "Novo item de transparência"}</CardTitle>
                 <CardDescription>
-                  Cadastre documentos, avisos e links publicados na secao de transparencia.
+                  Cadastre documentos, avisos e links publicados na seção de transparência.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSaveTransparency} className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Titulo</label>
+                      <label className="text-sm font-medium">Título</label>
                     <Input
                       value={transparencyForm.title}
                       onChange={(event) =>
@@ -806,13 +811,13 @@ const PanelWorkspace = ({
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Periodo</label>
+                      <label className="text-sm font-medium">Período</label>
                       <Input
                         value={transparencyForm.period}
                         onChange={(event) =>
                           setTransparencyForm({ ...transparencyForm, period: event.target.value })
                         }
-                        placeholder="Exercicio 2026"
+                        placeholder="Exercício 2026"
                         required
                       />
                     </div>
@@ -828,14 +833,14 @@ const PanelWorkspace = ({
                         }
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
-                        <option value="Disponivel">Disponivel</option>
-                        <option value="Em atualizacao">Em atualizacao</option>
+                        <option value="Disponivel">Disponível</option>
+                        <option value="Em atualizacao">Em atualização</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Descricao</label>
+                    <label className="text-sm font-medium">Descrição</label>
                     <Textarea
                       value={transparencyForm.description}
                       onChange={(event) =>
@@ -873,7 +878,7 @@ const PanelWorkspace = ({
                       <Upload className="w-3.5 h-3.5" />
                       {transparencyFile
                         ? `Arquivo selecionado: ${transparencyFile.name}`
-                        : "Se voce enviar um arquivo, ele substitui o link acima."}
+                        : "Se você enviar um arquivo, ele substitui o link acima."}
                     </p>
                   </div>
 
@@ -884,7 +889,7 @@ const PanelWorkspace = ({
                       ) : (
                         <Save className="w-4 h-4" />
                       )}
-                      {editingTransparencyId ? "Salvar alteracoes" : "Adicionar item"}
+                      {editingTransparencyId ? "Salvar alterações" : "Adicionar item"}
                     </Button>
                     <Button
                       type="button"
@@ -892,7 +897,7 @@ const PanelWorkspace = ({
                       onClick={resetTransparencyForm}
                       disabled={savingTransparency}
                     >
-                      Limpar formulario
+                      Limpar formulário
                     </Button>
                   </div>
                 </form>
@@ -918,7 +923,7 @@ const PanelWorkspace = ({
                         <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{item.description}</p>
                         <div className="flex flex-wrap gap-2 mt-3">
                           <span className="inline-flex text-xs font-semibold rounded-full bg-muted px-3 py-1">
-                            {item.status}
+                            {transparencyStatusLabel[item.status]}
                           </span>
                           {item.href && (
                             <span className="inline-flex text-xs font-semibold rounded-full bg-primary/10 text-primary px-3 py-1">

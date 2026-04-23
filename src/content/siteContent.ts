@@ -32,9 +32,9 @@ export interface TransparencyItem {
 export const defaultNewsItems: NewsItem[] = [
   {
     id: "calendario-nacional",
-    title: "Calendario nacional entra em consolidacao para o proximo ciclo junino",
+    title: "Calendário nacional entra em consolidação para o próximo ciclo junino",
     summary:
-      "A CONFEBRAQ segue articulando criterios tecnicos, cronograma e alinhamento com as entidades filiadas para fortalecer a organizacao do circuito nacional.",
+      "A CONFEBRAQ segue articulando critérios técnicos, cronograma e alinhamento com as entidades filiadas para fortalecer a organização do circuito nacional.",
     date: "2026-03-18",
     category: "Institucional",
     image: heroImage,
@@ -43,20 +43,20 @@ export const defaultNewsItems: NewsItem[] = [
   },
   {
     id: "rede-filiadas",
-    title: "Rede de filiadas mantem articulacao permanente em 22 unidades federativas",
+    title: "Rede de filiadas mantém articulação permanente em 22 unidades federativas",
     summary:
-      "O trabalho conjunto entre ligas, federacoes e associacoes continua ampliando o intercambio cultural e o fortalecimento do movimento junino em todo o pais.",
+      "O trabalho conjunto entre ligas, federações e associações continua ampliando o intercâmbio cultural e o fortalecimento do movimento junino em todo o país.",
     date: "2026-02-27",
-    category: "Articulacao",
+    category: "Articulação",
     sortOrder: 1,
   },
   {
     id: "memoria-e-comunicacao",
-    title: "Memoria, registro audiovisual e comunicacao seguem como frentes prioritarias",
+    title: "Memória, registro audiovisual e comunicação seguem como frentes prioritárias",
     summary:
-      "A entidade reforca a importancia de documentar festivais, resultados, trajetorias e boas praticas para preservar a historia das quadrilhas juninas brasileiras.",
+      "A entidade reforça a importância de documentar festivais, resultados, trajetórias e boas práticas para preservar a história das quadrilhas juninas brasileiras.",
     date: "2026-01-30",
-    category: "Comunicacao",
+    category: "Comunicação",
     sortOrder: 2,
   },
 ];
@@ -66,26 +66,26 @@ export const defaultTransparencyItems: TransparencyItem[] = [
     id: "estatuto-social",
     title: "Estatuto social",
     description:
-      "Documento-base de organizacao institucional, competencias e diretrizes da entidade.",
+      "Documento-base de organização institucional, competências e diretrizes da entidade.",
     period: "Consulta institucional permanente",
     status: "Em atualizacao",
     sortOrder: 0,
   },
   {
     id: "relatorio-institucional",
-    title: "Relatorio institucional",
+    title: "Relatório institucional",
     description:
-      "Resumo das principais acoes, articulacoes e frentes de trabalho acompanhadas pela CONFEBRAQ.",
-    period: "Exercicio vigente",
+      "Resumo das principais ações, articulações e frentes de trabalho acompanhadas pela CONFEBRAQ.",
+    period: "Exercício vigente",
     status: "Em atualizacao",
     sortOrder: 1,
   },
   {
     id: "prestacao-de-contas",
-    title: "Prestacao de contas anual",
+    title: "Prestação de contas anual",
     description:
-      "Area reservada para publicacao de demonstrativos, relatorios e arquivos de acompanhamento financeiro.",
-    period: "Publicacao anual",
+      "Área reservada para publicação de demonstrativos, relatórios e arquivos de acompanhamento financeiro.",
+    period: "Publicação anual",
     status: "Em atualizacao",
     sortOrder: 2,
   },

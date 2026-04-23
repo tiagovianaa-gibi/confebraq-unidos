@@ -1,5 +1,9 @@
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Header from "@/components/Header";
+import FooterSection from "@/components/FooterSection";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,14 +13,32 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Ops! Página não encontrada.</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Voltar para a página inicial
-        </a>
-      </div>
+    <div className="min-h-screen bg-muted">
+      <Header />
+
+      <main className="container mx-auto flex min-h-screen items-center justify-center px-4 pt-28 pb-12">
+        <Card className="w-full max-w-xl text-center">
+          <CardHeader>
+            <CardTitle className="text-5xl">404</CardTitle>
+            <CardDescription className="text-base">
+              Ops. Página não encontrada.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              O endereço <span className="font-mono">{location.pathname}</span> não existe no site.
+            </p>
+
+            <div className="flex justify-center">
+              <Button asChild>
+                <Link to="/">Voltar para a página inicial</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+
+      <FooterSection />
     </div>
   );
 };

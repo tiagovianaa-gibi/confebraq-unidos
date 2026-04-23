@@ -278,6 +278,35 @@ const normalizePreparedTransparencyItems = (
   );
 };
 
+const prepareNewsItemForFirestore = (item: NewsItem) => ({
+  id: item.id,
+  title: item.title,
+  summary: item.summary,
+  date: item.date,
+  category: item.category,
+  ...(item.image ? { image: item.image } : {}),
+  ...(item.imagePath ? { imagePath: item.imagePath } : {}),
+  featured: Boolean(item.featured),
+  sortOrder: item.sortOrder ?? 0,
+  createdAt: item.createdAt || new Date().toISOString(),
+  updatedAt: item.updatedAt || new Date().toISOString(),
+  createdBy: item.createdBy || "",
+});
+
+const prepareTransparencyItemForFirestore = (item: TransparencyItem) => ({
+  id: item.id,
+  title: item.title,
+  description: item.description,
+  period: item.period,
+  status: item.status,
+  ...(item.href ? { href: item.href } : {}),
+  ...(item.hrefPath ? { hrefPath: item.hrefPath } : {}),
+  sortOrder: item.sortOrder ?? 0,
+  createdAt: item.createdAt || new Date().toISOString(),
+  updatedAt: item.updatedAt || new Date().toISOString(),
+  createdBy: item.createdBy || "",
+});
+
 export const useSiteContent = () => {
   const [newsItems, setNewsState] = useState<NewsItem[]>(() => readLocalNewsItems());
   const [transparencyItems, setTransparencyState] = useState<TransparencyItem[]>(() =>
@@ -369,9 +398,9 @@ export const useSiteContent = () => {
         markNewsLoaded();
       },
       (snapshotError) => {
-        console.error("Falha ao ler noticias do Firebase:", snapshotError);
+        console.error("Falha ao ler notícias do Firebase:", snapshotError);
         setNewsState(readLocalNewsItems());
-        setError("Nao foi possivel sincronizar as noticias no momento.");
+        setError("Não foi possível sincronizar as notícias no momento.");
         setSource("local");
         markNewsLoaded();
       },
@@ -402,9 +431,9 @@ export const useSiteContent = () => {
         markTransparencyLoaded();
       },
       (snapshotError) => {
-        console.error("Falha ao ler transparencia do Firebase:", snapshotError);
+        console.error("Falha ao ler transparência do Firebase:", snapshotError);
         setTransparencyState(readLocalTransparencyItems());
-        setError("Nao foi possivel sincronizar a transparencia no momento.");
+        setError("Não foi possível sincronizar a transparência no momento.");
         setSource("local");
         markTransparencyLoaded();
       },
@@ -441,7 +470,9 @@ export const useSiteContent = () => {
     });
 
     nextItems.forEach((item) => {
-      batch.set(doc(db, NEWS_COLLECTION, item.id), item, { merge: true });
+      batch.set(doc(db, NEWS_COLLECTION, item.id), prepareNewsItemForFirestore(item), {
+        merge: true,
+      });
     });
 
     await batch.commit();
@@ -477,7 +508,11 @@ export const useSiteContent = () => {
     });
 
     nextItems.forEach((item) => {
-      batch.set(doc(db, TRANSPARENCY_COLLECTION, item.id), item, { merge: true });
+      batch.set(
+        doc(db, TRANSPARENCY_COLLECTION, item.id),
+        prepareTransparencyItemForFirestore(item),
+        { merge: true },
+      );
     });
 
     await batch.commit();

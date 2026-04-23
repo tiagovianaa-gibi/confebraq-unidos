@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { CheckCircle2, Plus, Save, Trash2, User } from "lucide-react";
+import { Save, Trash2, User } from "lucide-react";
 import { affiliateEntities } from "@/content/affiliates";
 import type { PanelAccessProfile, PanelUserRole } from "@/hooks/useFirebasePanelAuth";
 import { usePanelAccess } from "@/hooks/usePanelAccess";
@@ -15,7 +15,7 @@ const initialFormState = {
   uid: "",
   email: "",
   displayName: "",
-  role: "presidente" as PanelUserRole,
+  role: "entity" as PanelUserRole,
   entitySigla: "",
   active: true,
 };
@@ -48,17 +48,17 @@ const PanelAccessManager = () => {
 
     if (!formState.email.trim()) {
       toast({
-        title: "E-mail necessario",
-        description: "Informe o e-mail do usuario para cadastrar o acesso.",
+        title: "E-mail necessário",
+        description: "Informe o e-mail do usuário para cadastrar o acesso.",
         variant: "destructive",
       });
       return;
     }
 
-    if (formState.role === "presidente" && !formState.entitySigla) {
+    if (formState.role === "entity" && !formState.entitySigla) {
       toast({
-        title: "Entidade obrigatoria",
-        description: "Selecione a entidade estadual para o perfil de presidente.",
+        title: "Entidade obrigatória",
+        description: "Selecione a entidade estadual para o perfil de entidade.",
         variant: "destructive",
       });
       return;
@@ -73,7 +73,10 @@ const PanelAccessManager = () => {
         email: sanitizeEmail(formState.email),
         displayName: formState.displayName.trim() || formState.email.trim(),
         role: formState.role,
-        entitySigla: formState.role === "presidente" ? formState.entitySigla.trim().toUpperCase() : undefined,
+        entitySigla:
+          formState.role === "entity"
+            ? formState.entitySigla.trim().toUpperCase()
+            : undefined,
         active: formState.active,
       });
 
@@ -88,7 +91,7 @@ const PanelAccessManager = () => {
         description:
           saveError instanceof Error
             ? saveError.message
-            : "Nao foi possivel salvar o perfil de acesso.",
+            : "Não foi possível salvar o perfil de acesso.",
         variant: "destructive",
       });
     } finally {
@@ -118,8 +121,9 @@ const PanelAccessManager = () => {
       await deletePanelAccess(profileId);
       toast({
         title: "Acesso removido",
-        description: "O perfil de acesso foi excluido do Firestore.",
+        description: "O perfil de acesso foi excluído do Firestore.",
       });
+
       if (editingId === profileId) {
         resetForm();
       }
@@ -129,7 +133,7 @@ const PanelAccessManager = () => {
         description:
           deleteError instanceof Error
             ? deleteError.message
-            : "Nao foi possivel excluir o perfil de acesso.",
+            : "Não foi possível excluir o perfil de acesso.",
         variant: "destructive",
       });
     }
@@ -141,14 +145,14 @@ const PanelAccessManager = () => {
         <CardHeader>
           <CardTitle>Gerenciar acessos</CardTitle>
           <CardDescription>
-            Cadastre administradores e presidentes de entidade diretamente no Firestore.
+            Cadastre administradores e usuários de entidade diretamente no Firestore.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">E-mail do usuario</label>
+                <label className="text-sm font-medium">E-mail do usuário</label>
                 <Input
                   value={formState.email}
                   onChange={(event) =>
@@ -165,12 +169,12 @@ const PanelAccessManager = () => {
                   onChange={(event) =>
                     setFormState((current) => ({ ...current, displayName: event.target.value }))
                   }
-                  placeholder="Nome do usuario"
+                  placeholder="Nome do usuário"
                 />
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Tipo de acesso</label>
                 <select
@@ -180,17 +184,16 @@ const PanelAccessManager = () => {
                     setFormState((current) => ({
                       ...current,
                       role: event.target.value as PanelUserRole,
-                      entitySigla:
-                        event.target.value === "presidente" ? current.entitySigla : "",
+                      entitySigla: event.target.value === "entity" ? current.entitySigla : "",
                     }))
                   }
                 >
                   <option value="admin">Administrador</option>
-                  <option value="presidente">Presidente de entidade</option>
+                  <option value="entity">Usuário de entidade</option>
                 </select>
               </div>
 
-              {formState.role === "presidente" ? (
+              {formState.role === "entity" ? (
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Entidade estadual</label>
                   <select
@@ -238,10 +241,10 @@ const PanelAccessManager = () => {
             <div className="flex flex-wrap gap-3">
               <Button type="submit" disabled={saving}>
                 <Save className="w-4 h-4" />
-                {editingId ? "Salvar alteracoes" : "Adicionar acesso"}
+                {editingId ? "Salvar alterações" : "Adicionar acesso"}
               </Button>
               <Button type="button" variant="outline" onClick={resetForm} disabled={saving}>
-                Limpar formulario
+                Limpar formulário
               </Button>
             </div>
           </form>
@@ -252,7 +255,7 @@ const PanelAccessManager = () => {
         <CardHeader>
           <CardTitle>Usuários do painel</CardTitle>
           <CardDescription>
-            Lista de perfis de acesso salvos no Firestore (ou localmente se o Firebase não estiver configurado).
+            Lista de perfis de acesso salvos no Firestore ou localmente, se o Firebase não estiver configurado.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -273,18 +276,27 @@ const PanelAccessManager = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                        {profile.role === "admin" ? "Administrador" : "Presidente"}
+                        {profile.role === "admin" ? "Administrador" : "Entidade"}
                       </div>
-                      <h3 className="font-semibold text-foreground">{profile.displayName || profile.email}</h3>
+                      <h3 className="font-semibold text-foreground">
+                        {profile.displayName || profile.email}
+                      </h3>
                       <p className="text-sm text-muted-foreground">{profile.email}</p>
-                      {profile.role === "presidente" && profile.entitySigla ? (
+                      {profile.role === "entity" && profile.entitySigla ? (
                         <p className="text-sm text-muted-foreground">Entidade: {profile.entitySigla}</p>
                       ) : null}
-                      <p className="text-xs text-muted-foreground">{profile.active ? "Ativo" : "Inativo"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {profile.active ? "Ativo" : "Inativo"}
+                      </p>
                     </div>
 
-                    <div className="flex gap-2 shrink-0">
-                      <Button type="button" size="icon" variant="outline" onClick={() => handleEdit(profile)}>
+                    <div className="flex shrink-0 gap-2">
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => handleEdit(profile)}
+                      >
                         <User className="w-4 h-4" />
                       </Button>
                       <Button

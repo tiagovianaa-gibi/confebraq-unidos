@@ -47,6 +47,30 @@ export interface EntityReportInput {
   quadrilhas: QuadrilhaEntry[];
 }
 
+const normalizeInstagram = (value?: string) => {
+  const trimmedValue = value?.trim() || "";
+
+  if (!trimmedValue) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(trimmedValue)) {
+    return trimmedValue;
+  }
+
+  if (/^www\./i.test(trimmedValue) || /instagram\.com/i.test(trimmedValue)) {
+    return `https://${trimmedValue.replace(/^\/+/, "")}`;
+  }
+
+  const handle = trimmedValue.replace(/^@/, "").replace(/\/+$/, "");
+
+  if (handle && !handle.includes(" ")) {
+    return `https://instagram.com/${handle}`;
+  }
+
+  return trimmedValue;
+};
+
 const normalizeQuadrilha = (item: Partial<QuadrilhaEntry>, index: number): QuadrilhaEntry => ({
   id: item.id?.trim() || `quadrilha-${index + 1}`,
   name: item.name?.trim() || "",
@@ -131,7 +155,7 @@ const buildSummaryFromReport = (report: EntityReport): EntityReportSummary => ({
   entityName: report.entityName,
   uf: report.uf,
   presidentName: report.presidentName,
-  presidentEmail: report.presidentEmail,
+  instagram: report.instagram || "",
   totalQuadrilhas: report.totalQuadrilhas,
   totalQuadrilheiros: report.totalQuadrilheiros,
   updatedAt: report.updatedAt,
@@ -221,15 +245,17 @@ export const createEmptyQuadrilhaEntry = (): QuadrilhaEntry => ({
   participants: 0,
 });
 
-export const useEntityRegistry = ({
-  accessRole,
-  assignedEntitySigla,
-  selectedEntitySigla,
-}: {
-  accessRole: PanelUserRole;
+export const useEntityRegistry = (options?: {
+  accessRole?: PanelUserRole;
   assignedEntitySigla?: string;
   selectedEntitySigla?: string;
 }) => {
+  const {
+    accessRole = "admin",
+    assignedEntitySigla,
+    selectedEntitySigla,
+  } = options ?? {};
+
   const targetEntitySigla = accessRole === "admin"
     ? selectedEntitySigla?.trim().toUpperCase() || ""
     : assignedEntitySigla?.trim().toUpperCase() || "";
@@ -294,7 +320,7 @@ export const useEntityRegistry = ({
       (snapshotError) => {
         console.error("Falha ao ler os resumos das entidades:", snapshotError);
         syncLocalReports(true);
-        setError("Nao foi possivel sincronizar os cadastros das entidades no momento.");
+        setError("Não foi possível sincronizar os cadastros das entidades no momento.");
         setPublicLoaded(true);
       },
     );
@@ -340,7 +366,7 @@ export const useEntityRegistry = ({
         (snapshotError) => {
           console.error("Falha ao ler o cadastro privado da entidade:", snapshotError);
           syncLocalReports(true);
-          setError("Nao foi possivel sincronizar os cadastros das entidades no momento.");
+          setError("Não foi possível sincronizar os cadastros das entidades no momento.");
           setPrivateLoaded(true);
         },
       );
@@ -380,20 +406,21 @@ export const useEntityRegistry = ({
     const entity = affiliateEntityBySigla[normalizedEntitySigla];
 
     if (!entity) {
-      throw new Error("Selecione a entidade estadual responsavel por este cadastro.");
+      throw new Error("Selecione a entidade estadual responsável por este cadastro.");
     }
 
     if (
-      accessRole === "presidente" &&
+      accessRole === "entity" &&
       assignedEntitySigla &&
       normalizedEntitySigla !== assignedEntitySigla.trim().toUpperCase()
     ) {
-      throw new Error("Seu usuario so pode atualizar a propria entidade estadual.");
+      throw new Error("Seu usuário só pode atualizar a própria entidade estadual.");
     }
 
     const quadrilhas = input.quadrilhas
       .map((quadrilha, index) => normalizeQuadrilha(quadrilha, index))
       .filter((quadrilha) => quadrilha.name && quadrilha.participants > 0);
+    const instagram = normalizeInstagram(input.instagram);
 
     if (quadrilhas.length === 0) {
       throw new Error("Cadastre pelo menos uma quadrilha com a quantidade de quadrilheiros.");
@@ -406,6 +433,7 @@ export const useEntityRegistry = ({
       uf: entity.uf,
       presidentName: input.presidentName.trim(),
       presidentEmail: input.presidentEmail.trim().toLowerCase(),
+      instagram,
       quadrilhas,
       totalQuadrilhas: quadrilhas.length,
       totalQuadrilheiros: quadrilhas.reduce(
@@ -434,14 +462,8 @@ export const useEntityRegistry = ({
     }
 
     const batch = writeBatch(db);
-    batch.set(doc(db, PRIVATE_REPORTS_COLLECTION, normalizedEntitySigla), nextReport, {
-      merge: true,
-    });
-    batch.set(
-      doc(db, PUBLIC_REPORTS_COLLECTION, normalizedEntitySigla),
-      nextSummary,
-      { merge: true },
-    );
+    batch.set(doc(db, PRIVATE_REPORTS_COLLECTION, normalizedEntitySigla), nextReport);
+    batch.set(doc(db, PUBLIC_REPORTS_COLLECTION, normalizedEntitySigla), nextSummary);
 
     await batch.commit();
     return nextReport;
@@ -449,6 +471,7 @@ export const useEntityRegistry = ({
 
   return {
     entityReports,
+    summaries: entityReports,
     myEntityReport,
     metrics,
     loading: !publicLoaded || !privateLoaded,

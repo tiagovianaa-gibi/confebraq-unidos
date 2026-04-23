@@ -10,12 +10,32 @@ service cloud.firestore {
       return /databases/$(database)/documents/panelAccess/$(userId);
     }
 
-    function hasUserAccessProfile() {
+    function hasUserEmail() {
+      return isSignedIn() &&
+        request.auth.token.email is string &&
+        request.auth.token.email.size() > 0;
+    }
+
+    function emailAccessPath() {
+      return /databases/$(database)/documents/panelAccess/$(request.auth.token.email);
+    }
+
+    function hasUidAccessProfile() {
       return isSignedIn() && exists(userAccessPath(request.auth.uid));
     }
 
+    function hasEmailAccessProfile() {
+      return hasUserEmail() && exists(emailAccessPath());
+    }
+
+    function hasUserAccessProfile() {
+      return hasUidAccessProfile() || hasEmailAccessProfile();
+    }
+
     function currentUserAccess() {
-      return get(userAccessPath(request.auth.uid)).data;
+      return hasUidAccessProfile()
+        ? get(userAccessPath(request.auth.uid)).data
+        : get(emailAccessPath()).data;
     }
 
     function isActivePanelUser() {
@@ -27,7 +47,10 @@ service cloud.firestore {
     }
 
     function isEntityUser() {
-      return isActivePanelUser() && currentUserAccess().role == "entity";
+      return isActivePanelUser() && (
+        currentUserAccess().role == "entity" ||
+        currentUserAccess().role == "presidente"
+      );
     }
 
     function managesEntity(entitySigla) {
@@ -53,14 +76,16 @@ service cloud.firestore {
           "active",
           "updatedAt",
         ]) &&
-        data.uid == userId &&
+        data.uid is string &&
+        isNonEmptyString(data.email) &&
         data.email is string &&
         data.displayName is string &&
         data.active is bool &&
         data.updatedAt is string &&
         (
           data.role == "admin" ||
-          (data.role == "entity" && isNonEmptyString(data.entitySigla))
+          (data.role == "entity" && isNonEmptyString(data.entitySigla)) ||
+          (data.role == "presidente" && isNonEmptyString(data.entitySigla))
         );
     }
 
@@ -71,6 +96,7 @@ service cloud.firestore {
           "entityName",
           "uf",
           "presidentName",
+          "instagram",
           "totalQuadrilhas",
           "totalQuadrilheiros",
           "updatedAt",
@@ -81,6 +107,7 @@ service cloud.firestore {
         isNonEmptyString(data.entityName) &&
         isNonEmptyString(data.uf) &&
         data.presidentName is string &&
+        (!data.keys().hasAny(["instagram"]) || data.instagram is string) &&
         isNonNegativeInt(data.totalQuadrilhas) &&
         isNonNegativeInt(data.totalQuadrilheiros) &&
         isNonEmptyString(data.updatedAt);
@@ -94,6 +121,7 @@ service cloud.firestore {
           "uf",
           "presidentName",
           "presidentEmail",
+          "instagram",
           "quadrilhas",
           "totalQuadrilhas",
           "totalQuadrilheiros",
@@ -106,6 +134,7 @@ service cloud.firestore {
         isNonEmptyString(data.uf) &&
         data.presidentName is string &&
         data.presidentEmail is string &&
+        (!data.keys().hasAny(["instagram"]) || data.instagram is string) &&
         data.quadrilhas is list &&
         data.quadrilhas.size() > 0 &&
         data.quadrilhas.size() <= 200 &&
@@ -171,7 +200,12 @@ service cloud.firestore {
     }
 
     match /panelAccess/{userId} {
-      allow read: if isSignedIn() && (request.auth.uid == userId || isPanelAdmin());
+      allow read: if isSignedIn() && (
+        request.auth.uid == userId ||
+        (hasUserEmail() && request.auth.token.email == userId) ||
+        isPanelAdmin() ||
+        resource.data.email == request.auth.token.email
+      );
       allow create, update: if isPanelAdmin() &&
         isValidPanelAccessProfile(request.resource.data, userId);
       allow delete: if isPanelAdmin();

@@ -11,7 +11,6 @@ import {
   getDocs,
   onSnapshot,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { affiliateEntityBySigla } from "@/content/affiliates";
@@ -26,9 +25,10 @@ import {
 const LOCAL_PANEL_USER_STORAGE_KEY = "confebraq.panel.local-user";
 const PANEL_ACCESS_COLLECTION = "panelAccess";
 
-export type PanelUserRole = "admin" | "presidente";
+export type PanelUserRole = "admin" | "entity";
 
 export interface PanelAccessProfile {
+  id: string;
   uid: string;
   email: string;
   displayName: string;
@@ -63,9 +63,10 @@ const isLocalPanelOrigin = () => {
 const normalizePanelAccessProfile = (
   rawProfile: Partial<PanelAccessProfile>,
   user: PanelAuthUser,
+  fallbackId: string,
 ): PanelAccessProfile | null => {
   const role = rawProfile.role === "admin" || rawProfile.role === "presidente" || rawProfile.role === "entity"
-    ? (rawProfile.role === "entity" ? "presidente" : rawProfile.role)
+    ? (rawProfile.role === "presidente" ? "entity" : rawProfile.role)
     : null;
 
   if (!role) {
@@ -74,16 +75,17 @@ const normalizePanelAccessProfile = (
 
   const entitySigla = rawProfile.entitySigla?.trim().toUpperCase() || undefined;
 
-  if (role === "presidente" && (!entitySigla || !affiliateEntityBySigla[entitySigla])) {
+  if (role === "entity" && (!entitySigla || !affiliateEntityBySigla[entitySigla])) {
     return null;
   }
 
   return {
+    id: rawProfile.id?.trim() || fallbackId,
     uid: user.uid,
     email: rawProfile.email?.trim().toLowerCase() || user.email?.toLowerCase() || "",
-    displayName: rawProfile.displayName?.trim() || user.displayName || "Usuario do painel",
+    displayName: rawProfile.displayName?.trim() || user.displayName || "Usuário do painel",
     role,
-    entitySigla: role === "presidente" ? entitySigla : undefined,
+    entitySigla: role === "entity" ? entitySigla : undefined,
     active: rawProfile.active === true,
     updatedAt: rawProfile.updatedAt?.trim() || undefined,
   };
@@ -109,13 +111,12 @@ const findPanelAccessProfileByEmail = async (
   }
 
   const rawProfile = snapshot.docs[0].data() as Partial<PanelAccessProfile>;
-  const normalized = normalizePanelAccessProfile(rawProfile, user);
+  const normalized = normalizePanelAccessProfile(rawProfile, user, snapshot.docs[0].id);
 
   if (!normalized) {
     return null;
   }
 
-  await setDoc(doc(db, PANEL_ACCESS_COLLECTION, user.uid), normalized, { merge: true });
   return normalized;
 };
 
@@ -202,6 +203,7 @@ export const useFirebasePanelAuth = () => {
 
     if (user.provider === "local") {
       setAccessProfile({
+        id: user.uid,
         uid: user.uid,
         email: user.email || "painel-local@localhost",
         displayName: user.displayName || "Administrador local",
@@ -240,6 +242,7 @@ export const useFirebasePanelAuth = () => {
           normalizePanelAccessProfile(
             snapshot.data() as Partial<PanelAccessProfile>,
             user,
+            snapshot.id,
           ),
         );
         setAccessLoaded(true);
@@ -268,7 +271,7 @@ export const useFirebasePanelAuth = () => {
 
   const signInWithGoogle = async () => {
     if (!auth || !googleProvider) {
-      throw new Error("O Firebase Auth ainda nao foi configurado neste projeto.");
+      throw new Error("O Firebase Auth ainda não foi configurado neste projeto.");
     }
 
     const result = await signInWithPopup(auth, googleProvider);
@@ -277,7 +280,7 @@ export const useFirebasePanelAuth = () => {
 
   const signInLocally = async () => {
     if (!isLocalAccessEnabled) {
-      throw new Error("O acesso local ao painel so e liberado em localhost sem Firebase configurado.");
+      throw new Error("O acesso local ao painel só é liberado em localhost sem Firebase configurado.");
     }
 
     const localUser = createLocalPanelUser();
@@ -311,7 +314,7 @@ export const useFirebasePanelAuth = () => {
     signInWithGoogle,
     signInLocally,
     signOutFromGoogle,
-    assignedEntitySigla: accessProfile?.role === "presidente" ? accessProfile.entitySigla : undefined,
+    assignedEntitySigla: accessProfile?.role === "entity" ? accessProfile.entitySigla : undefined,
     userRole: accessProfile?.role ?? (user?.provider === "local" ? "admin" : null),
   };
 };

@@ -2,13 +2,48 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userAccessPath(userId) {
+      return /databases/(default)/documents/panelAccess/$(userId);
+    }
+
+    function hasUserEmail() {
+      return isSignedIn() &&
+        request.auth.token.email is string &&
+        request.auth.token.email.size() > 0;
+    }
+
+    function emailAccessPath() {
+      return /databases/(default)/documents/panelAccess/$(request.auth.token.email);
+    }
+
+    function emailAccessPathLowerCase() {
+      return /databases/(default)/documents/panelAccess/$(request.auth.token.email.toLowerCase());
+    }
+
+    function hasUidAccessProfile() {
+      return isSignedIn() &&
+        firestore.exists(userAccessPath(request.auth.uid));
+    }
+
+    function hasEmailAccessProfile() {
+      return hasUserEmail() &&
+        (firestore.exists(emailAccessPath()) || firestore.exists(emailAccessPathLowerCase()));
+    }
+
     function hasUserAccessProfile() {
-      return request.auth != null &&
-        firestore.exists(/databases/(default)/documents/panelAccess/$(request.auth.uid));
+      return hasUidAccessProfile() || hasEmailAccessProfile();
     }
 
     function currentUserAccess() {
-      return firestore.get(/databases/(default)/documents/panelAccess/$(request.auth.uid)).data;
+      return hasUidAccessProfile()
+        ? firestore.get(userAccessPath(request.auth.uid)).data
+        : firestore.exists(emailAccessPath())
+        ? firestore.get(emailAccessPath()).data
+        : firestore.get(emailAccessPathLowerCase()).data;
     }
 
     function isPanelAdmin() {

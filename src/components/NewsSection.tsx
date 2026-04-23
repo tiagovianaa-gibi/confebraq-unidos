@@ -16,13 +16,13 @@ const NewsSection = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-secondary font-semibold text-sm uppercase tracking-widest">
-            Atualizacoes
+            Atualizações
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground mt-3 mb-6">
-            Noticias
+            Notícias
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Conteudo institucional alimentado pelo painel do site e sincronizado pelo Firebase.
+            Conteúdo institucional alimentado pelo painel do site e sincronizado pelo Firebase.
           </p>
           <div className="w-24 h-1 gradient-warm mx-auto rounded-full mt-6" />
         </div>
@@ -69,7 +69,7 @@ const NewsSection = () => {
                   </p>
 
                   <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                    Atualizacao pelo painel do site
+                    Atualização pelo painel do site
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -80,7 +80,7 @@ const NewsSection = () => {
           <div className="bg-card rounded-xl border border-border p-10 text-center">
             <Newspaper className="w-12 h-12 mx-auto text-muted-foreground/40 mb-4" />
             <p className="text-muted-foreground">
-              Nenhuma noticia cadastrada no painel do site.
+              Nenhuma notícia cadastrada no painel do site.
             </p>
           </div>
         )}
