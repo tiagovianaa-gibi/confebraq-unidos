@@ -46,6 +46,8 @@ const MediaSection = () => {
                 {[
                   { id: "aT2QPtqS1NI", title: "Concurso Nacional de Destaques Juninos CONFEBRAQ 2025 — Casal de Noivos" },
                   { id: "xCutwoSEtcE", title: "XIX Concurso Nacional de Quadrilhas Juninas da CONFEBRAQ — AO VIVO | 13/07/2024" },
+                  { id: "3p8K8I62aws", title: "No Coração do Arraial, Primeiro Ato — Chegada" },
+                  { id: "J62WJgk0_Uk", title: "XVIII Concurso Nacional de Quadrilha Junina CONFEBRAQ 28/07/2024" },
                 ].map((video, index) => (
                   <a
                     key={index}
