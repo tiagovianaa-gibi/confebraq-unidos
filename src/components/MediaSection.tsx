@@ -28,7 +28,7 @@ const MediaSection = () => {
 
           <div className="flex flex-col gap-4">
             <a
-              href="https://www.youtube.com/@confebraq"
+              href="https://www.youtube.com/@confebraqconfederacaobrasi6833"
               target="_blank"
               rel="noopener noreferrer"
               className="gradient-warm rounded-xl p-5 text-center hover:scale-[1.02] transition-transform"
