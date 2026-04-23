@@ -13,6 +13,7 @@ import {
   type TransparencyItem,
 } from "@/content/siteContent";
 import { db } from "@/integrations/firebase/client";
+import { normalizePublicAssetUrl } from "@/lib/utils";
 
 const NEWS_STORAGE_KEY = "confebraq.site.news";
 const TRANSPARENCY_STORAGE_KEY = "confebraq.site.transparency";
@@ -68,7 +69,7 @@ const normalizeNewsItem = (
     summary,
     date,
     category,
-    image: item.image?.trim() || undefined,
+    image: normalizePublicAssetUrl(item.image?.trim()),
     imagePath: item.imagePath?.trim() || undefined,
     featured: Boolean(item.featured),
     sortOrder:

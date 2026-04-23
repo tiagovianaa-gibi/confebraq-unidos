@@ -27,6 +27,7 @@ import EntityRegistryPanel from "@/components/panel/EntityRegistryPanel";
 import PanelAccessManager from "@/components/panel/PanelAccessManager";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { toast } from "@/hooks/use-toast";
+import { normalizePublicAssetUrl } from "@/lib/utils";
 
 type NewsFormState = {
   title: string;
@@ -91,23 +92,16 @@ const normalizeNewsImageUrl = (value: string) => {
     return undefined;
   }
 
-  if (/^https?:\/\//i.test(trimmedValue) || /^\/\//.test(trimmedValue)) {
-    return trimmedValue;
-  }
-
-  if (trimmedValue.startsWith("/")) {
-    return trimmedValue;
-  }
-
-  if (/^noticias\//i.test(trimmedValue)) {
-    return `/${trimmedValue}`;
+  const normalizedPublicUrl = normalizePublicAssetUrl(trimmedValue);
+  if (normalizedPublicUrl) {
+    return normalizedPublicUrl;
   }
 
   if (/^[\w\-]+\.[a-zA-Z0-9]+$/.test(trimmedValue)) {
     return `/noticias/${trimmedValue}`;
   }
 
-  return trimmedValue;
+  return trimmedValue.replace(/\\/g, "/");
 };
 
 const uploadSiteFile = async (
