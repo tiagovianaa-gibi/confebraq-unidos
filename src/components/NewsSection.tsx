@@ -1,4 +1,5 @@
 import { ArrowRight, Calendar, Newspaper } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const formatDate = (dateStr: string) =>
@@ -61,7 +62,9 @@ const NewsSection = () => {
                   </div>
 
                   <h3 className={`font-display font-bold text-foreground mb-3 ${item.featured ? "text-2xl" : "text-xl"}`}>
-                    {item.title}
+                    <Link to={`/noticia/${item.id}`} className="hover:text-primary transition-colors">
+                      {item.title}
+                    </Link>
                   </h3>
 
                   <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -69,8 +72,10 @@ const NewsSection = () => {
                   </p>
 
                   <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                    Atualização pelo painel do site
-                    <ArrowRight className="w-4 h-4" />
+                    <Link to={`/noticia/${item.id}`} className="inline-flex items-center gap-2 hover:underline">
+                      Leia mais
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </div>
                 </div>
               </article>
