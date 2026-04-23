@@ -13,7 +13,7 @@ import {
   type TransparencyItem,
 } from "@/content/siteContent";
 import { db } from "@/integrations/firebase/client";
-import { normalizePublicAssetUrl } from "@/lib/utils";
+import { normalizePublicAssetUrl, repairMojibakeText } from "@/lib/utils";
 
 const NEWS_STORAGE_KEY = "confebraq.site.news";
 const TRANSPARENCY_STORAGE_KEY = "confebraq.site.transparency";
@@ -23,24 +23,10 @@ const TRANSPARENCY_COLLECTION = "siteTransparency";
 
 type SiteContentSource = "firebase" | "local";
 
-const repairMojibake = (value: string) => {
-  if (!/[ÃƒÃ¢Ã‚]/.test(value)) {
-    return value;
-  }
-
-  try {
-    return new TextDecoder("utf-8").decode(
-      Uint8Array.from(value, (char) => char.charCodeAt(0)),
-    );
-  } catch {
-    return value;
-  }
-};
-
 const normalizeTransparencyStatus = (
   status: string,
 ): TransparencyItem["status"] => {
-  const repairedStatus = repairMojibake(status).trim().toLowerCase();
+  const repairedStatus = repairMojibakeText(status).trim().toLowerCase();
 
   if (["disponivel", "disponível"].includes(repairedStatus)) {
     return "Disponivel";
@@ -54,10 +40,10 @@ const normalizeNewsItem = (
   fallbackId: string,
   fallbackSortOrder: number,
 ): NewsItem | null => {
-  const title = repairMojibake(item.title?.trim() || "");
-  const summary = repairMojibake(item.summary?.trim() || "");
+  const title = repairMojibakeText(item.title?.trim() || "");
+  const summary = repairMojibakeText(item.summary?.trim() || "");
   const date = item.date?.trim() || "";
-  const category = repairMojibake(item.category?.trim() || "");
+  const category = repairMojibakeText(item.category?.trim() || "");
 
   if (!title || !summary || !date || !category) {
     return null;
@@ -87,9 +73,9 @@ const normalizeTransparencyItem = (
   fallbackId: string,
   fallbackSortOrder: number,
 ): TransparencyItem | null => {
-  const title = repairMojibake(item.title?.trim() || "");
-  const description = repairMojibake(item.description?.trim() || "");
-  const period = repairMojibake(item.period?.trim() || "");
+  const title = repairMojibakeText(item.title?.trim() || "");
+  const description = repairMojibakeText(item.description?.trim() || "");
+  const period = repairMojibakeText(item.period?.trim() || "");
 
   if (!title || !description || !period) {
     return null;
@@ -101,7 +87,7 @@ const normalizeTransparencyItem = (
     description,
     period,
     status: normalizeTransparencyStatus(item.status || ""),
-    href: item.href?.trim() || undefined,
+    href: normalizePublicAssetUrl(item.href?.trim(), "transparencia"),
     hrefPath: item.hrefPath?.trim() || undefined,
     sortOrder:
       Number.isFinite(item.sortOrder) && Number(item.sortOrder) >= 0
