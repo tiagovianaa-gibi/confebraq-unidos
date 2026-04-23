@@ -1,6 +1,7 @@
 import { ArrowRight, Calendar, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { normalizePublicAssetUrl } from "@/lib/utils";
 
 const formatDate = (dateStr: string) =>
   new Date(dateStr).toLocaleDateString("pt-BR", {
@@ -40,7 +41,7 @@ const NewsSection = () => {
                 {item.image ? (
                   <div className={item.featured ? "aspect-[21/9] overflow-hidden" : "aspect-video overflow-hidden"}>
                     <img
-                      src={item.image}
+                      src={normalizePublicAssetUrl(item.image)}
                       alt={item.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                     />

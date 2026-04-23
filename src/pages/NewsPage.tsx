@@ -3,6 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Calendar, Newspaper } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { Button } from "@/components/ui/button";
+import Header from "@/components/Header";
+import FooterSection from "@/components/FooterSection";
+import { normalizePublicAssetUrl } from "@/lib/utils";
 
 const formatDate = (dateStr: string) =>
   new Date(dateStr).toLocaleDateString("pt-BR", {
@@ -47,10 +50,14 @@ const NewsPage = () => {
     );
   }
 
+  const imageUrl = normalizePublicAssetUrl(newsItem.image);
+
   return (
-    <main className="min-h-screen bg-background py-20">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="min-h-screen">
+      <Header />
+      <main className="bg-background py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-secondary/80">Notícias</p>
             <h1 className="text-4xl sm:text-5xl font-display font-bold text-foreground mt-4">
@@ -62,9 +69,9 @@ const NewsPage = () => {
           </Button>
         </div>
 
-        {newsItem.image && (
+        {imageUrl && (
           <div className="overflow-hidden rounded-3xl border border-border bg-muted mb-8">
-            <img src={newsItem.image} alt={newsItem.title} className="w-full h-auto object-cover" />
+            <img src={imageUrl} alt={newsItem.title} className="w-full h-auto object-cover" />
           </div>
         )}
 
@@ -91,6 +98,8 @@ const NewsPage = () => {
         </div>
       </div>
     </main>
+    <FooterSection />
+  </div>
   );
 };
 
