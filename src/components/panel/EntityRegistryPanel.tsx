@@ -353,6 +353,11 @@ const EntityRegistryPanel = ({
                   </div>
                 </div>
               ))}
+
+              <Button type="button" variant="outline" onClick={addQuadrilha} className="w-full">
+                <Plus className="w-4 h-4" />
+                Adicionar quadrilha
+              </Button>
             </div>
 
             <div className="rounded-lg border border-border bg-muted/40 p-4">
