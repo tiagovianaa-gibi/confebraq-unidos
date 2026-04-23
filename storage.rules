@@ -10,46 +10,11 @@ service firebase.storage {
       return /databases/(default)/documents/panelAccess/$(userId);
     }
 
-    function hasUserEmail() {
-      return isSignedIn() &&
-        request.auth.token.email is string &&
-        request.auth.token.email.size() > 0;
-    }
-
-    function emailAccessPath() {
-      return /databases/(default)/documents/panelAccess/$(request.auth.token.email);
-    }
-
-    function emailAccessPathLowerCase() {
-      return /databases/(default)/documents/panelAccess/$(request.auth.token.email.toLowerCase());
-    }
-
-    function hasUidAccessProfile() {
-      return isSignedIn() &&
-        firestore.exists(userAccessPath(request.auth.uid));
-    }
-
-    function hasEmailAccessProfile() {
-      return hasUserEmail() &&
-        (firestore.exists(emailAccessPath()) || firestore.exists(emailAccessPathLowerCase()));
-    }
-
-    function hasUserAccessProfile() {
-      return hasUidAccessProfile() || hasEmailAccessProfile();
-    }
-
-    function currentUserAccess() {
-      return hasUidAccessProfile()
-        ? firestore.get(userAccessPath(request.auth.uid)).data
-        : firestore.exists(emailAccessPath())
-        ? firestore.get(emailAccessPath()).data
-        : firestore.get(emailAccessPathLowerCase()).data;
-    }
-
     function isPanelAdmin() {
-      return hasUserAccessProfile() &&
-        currentUserAccess().active == true &&
-        currentUserAccess().role == "admin";
+      return isSignedIn() &&
+        firestore.exists(userAccessPath(request.auth.uid)) &&
+        firestore.get(userAccessPath(request.auth.uid)).data.active == true &&
+        firestore.get(userAccessPath(request.auth.uid)).data.role == "admin";
     }
 
     match /site/{section}/{allPaths=**} {
