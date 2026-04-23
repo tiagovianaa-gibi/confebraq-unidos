@@ -149,9 +149,7 @@ const PanelWorkspace = ({
   const [transparencyForm, setTransparencyForm] = useState<TransparencyFormState>(
     createEmptyTransparencyForm,
   );
-  const [newsImageFile, setNewsImageFile] = useState<File | null>(null);
   const [transparencyFile, setTransparencyFile] = useState<File | null>(null);
-  const [newsUploadInputKey, setNewsUploadInputKey] = useState(0);
   const [transparencyUploadInputKey, setTransparencyUploadInputKey] = useState(0);
   const [savingNews, setSavingNews] = useState(false);
   const [savingTransparency, setSavingTransparency] = useState(false);
@@ -169,8 +167,6 @@ const PanelWorkspace = ({
   const resetNewsForm = () => {
     setEditingNewsId(null);
     setNewsForm(createEmptyNewsForm());
-    setNewsImageFile(null);
-    setNewsUploadInputKey((current) => current + 1);
   };
 
   const resetTransparencyForm = () => {
@@ -178,10 +174,6 @@ const PanelWorkspace = ({
     setTransparencyForm(createEmptyTransparencyForm());
     setTransparencyFile(null);
     setTransparencyUploadInputKey((current) => current + 1);
-  };
-
-  const handleSelectNewsImage = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewsImageFile(event.target.files?.[0] ?? null);
   };
 
   const handleSelectTransparencyFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -206,17 +198,11 @@ const PanelWorkspace = ({
       ? newsItems.find((item) => item.id === editingNewsId) ?? null
       : null;
 
-    let uploadedImagePath: string | undefined;
     let nextImageUrl = newsForm.image.trim() || undefined;
-    let nextImagePath = currentItem?.imagePath;
+    let nextImagePath = nextImageUrl ? undefined : currentItem?.imagePath;
 
     try {
-      if (newsImageFile) {
-        const uploadResult = await uploadSiteFile("news", userId, newsImageFile);
-        nextImageUrl = uploadResult.url;
-        nextImagePath = uploadResult.path;
-        uploadedImagePath = uploadResult.path;
-      } else if (!nextImageUrl) {
+      if (!nextImageUrl) {
         nextImagePath = undefined;
       }
 
@@ -257,10 +243,6 @@ const PanelWorkspace = ({
             : "O conteúdo foi salvo neste navegador.",
       });
     } catch (saveError) {
-      if (uploadedImagePath && uploadedImagePath !== currentItem?.imagePath) {
-        await removeStoredFile(uploadedImagePath);
-      }
-
       toast({
         title: "Falha ao salvar notícia",
         description:
@@ -366,8 +348,6 @@ const PanelWorkspace = ({
       image: item.image ?? "",
       featured: Boolean(item.featured),
     });
-    setNewsImageFile(null);
-    setNewsUploadInputKey((current) => current + 1);
   };
 
   const editTransparency = (item: TransparencyItem) => {
@@ -685,28 +665,16 @@ const PanelWorkspace = ({
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">URL da imagem</label>
+                    <label className="text-sm font-medium">URL ou caminho da imagem</label>
                     <Input
-                      placeholder="https://..."
+                      placeholder="/noticias/exemplo.png"
                       value={newsForm.image}
                       onChange={(event) => setNewsForm({ ...newsForm, image: event.target.value })}
                     />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Upload de imagem</label>
-                    <Input
-                      key={newsUploadInputKey}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleSelectNewsImage}
-                      disabled={!storage}
-                    />
-                    <p className="text-xs text-muted-foreground flex items-center gap-2">
-                      <Upload className="w-3.5 h-3.5" />
-                      {newsImageFile
-                        ? `Arquivo selecionado: ${newsImageFile.name}`
-                        : "Se você enviar um arquivo, ele substitui a URL acima."}
+                    <p className="text-xs text-muted-foreground">
+                      Coloque aqui o caminho da imagem que será commitada no repo, por exemplo
+                      <span className="font-mono">/noticias/arquivo.png</span>. Não é necessário
+                      enviar a imagem pelo painel.
                     </p>
                   </div>
 
