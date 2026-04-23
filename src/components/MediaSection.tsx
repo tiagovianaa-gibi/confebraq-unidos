@@ -44,8 +44,8 @@ const MediaSection = () => {
               </h3>
               <div className="space-y-3">
                 {[
-                  { id: "XDnXBkAMap4", title: "Concurso Nacional 2025" },
-                  { id: "XDnXBkAMap4", title: "Melhores momentos" },
+                  { id: "aT2QPtqS1NI", title: "Concurso Nacional de Destaques Juninos CONFEBRAQ 2025 — Casal de Noivos" },
+                  { id: "xCutwoSEtcE", title: "XIX Concurso Nacional de Quadrilhas Juninas da CONFEBRAQ — AO VIVO | 13/07/2024" },
                 ].map((video, index) => (
                   <a
                     key={index}
