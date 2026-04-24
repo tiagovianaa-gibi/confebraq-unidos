@@ -6,6 +6,7 @@ import MediaSection from "@/components/MediaSection";
 import AffiliatesSection from "@/components/AffiliatesSection";
 import ChampionsSection from "@/components/ChampionsSection";
 import TransparencySection from "@/components/TransparencySection";
+import DocumentosSection from "@/components/DocumentosSection";
 import FooterSection from "@/components/FooterSection";
 
 const Index = () => {
@@ -19,6 +20,7 @@ const Index = () => {
       <AffiliatesSection />
       <ChampionsSection />
       <TransparencySection />
+      <DocumentosSection />
       <FooterSection />
     </div>
   );

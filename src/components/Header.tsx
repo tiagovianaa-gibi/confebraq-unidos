@@ -11,6 +11,7 @@ const navItems = [
   { label: "Mídia", href: "/#midia" },
   { label: "Filiadas", href: "/#filiadas" },
   { label: "Campeões", href: "/#campeoes" },
+  { label: "Documentos", href: "/#documentos" },
   { label: "Transparência", href: "/#transparencia" },
   { label: "Contato", href: "/#contato" },
 ];
