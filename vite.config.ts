@@ -16,19 +16,11 @@ export default defineConfig(() => ({
     cssCodeSplit: false,
     rollupOptions: {
       output: {
-        entryFileNames: "assets/[name].js",
-        chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId?.replace(/\\/g, "/") ?? "";
-
-          if (facadeModuleId.endsWith("/src/main.tsx")) {
-            return "assets/main.js";
-          }
-
-          return "assets/[name]-[hash].js";
-        },
+        entryFileNames: "assets/[name]-[hash].js",
+        chunkFileNames: "assets/[name]-[hash].js",
         assetFileNames: (assetInfo) =>
           assetInfo.name?.endsWith(".css")
-            ? "assets/app.css"
+            ? "assets/app-[hash].css"
             : "assets/[name]-[hash][extname]",
       },
     },
