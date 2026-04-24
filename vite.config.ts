@@ -12,6 +12,7 @@ export default defineConfig(() => ({
     },
   },
   build: {
+    target: ["es2015", "chrome64", "safari12", "firefox67", "edge79"],
     cssCodeSplit: false,
     rollupOptions: {
       output: {
