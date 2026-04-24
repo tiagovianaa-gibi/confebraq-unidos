@@ -14,10 +14,16 @@ const splitIntoParagraphs = (text: string): string[] => {
   if (text.includes("\n")) {
     return text.split("\n").map((p) => p.trim()).filter(Boolean);
   }
-  const parts = text.split(/(?<=[.!?])\s+(?=[A-ZÁÀÃÂÉÊÍÓÕÔÚÇ])/);
+  // Capturing group instead of lookbehind — supported in all mobile browsers
+  const raw = text.split(/([.!?])\s+(?=[A-ZÁÀÃÂÉÊÍÓÕÔÚÇ])/);
+  const sentences: string[] = [];
+  for (let i = 0; i < raw.length; i += 2) {
+    const sentence = (raw[i] + (raw[i + 1] ?? "")).trim();
+    if (sentence) sentences.push(sentence);
+  }
   const paragraphs: string[] = [];
-  for (let i = 0; i < parts.length; i += 3) {
-    const chunk = parts.slice(i, i + 3).join(" ").trim();
+  for (let i = 0; i < sentences.length; i += 3) {
+    const chunk = sentences.slice(i, i + 3).join(" ").trim();
     if (chunk) paragraphs.push(chunk);
   }
   return paragraphs.length > 0 ? paragraphs : [text];
