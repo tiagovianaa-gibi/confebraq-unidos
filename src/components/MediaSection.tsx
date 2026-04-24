@@ -8,24 +8,24 @@ import {
 } from "@/components/ui/carousel";
 
 const photos = [
-  { file: "arrastao-do-amor-pa", name: "Arrastão do Amor", uf: "PA" },
-  { file: "arroxa-o-no-df", name: "Arroxa o No", uf: "DF" },
-  { file: "balance-do-cerrado-go", name: "Balance do Cerrado", uf: "GO" },
+  { file: "arrastão-do-amor-pa", name: "Arrastão do Amor", uf: "PA" },
+  { file: "arroxa-o-nó-df", name: "Arroxa o Nó", uf: "DF" },
+  { file: "balancê-do-cerrado-go", name: "Balancê do Cerrado", uf: "GO" },
   { file: "eita-juino-rr", name: "Eita Juino", uf: "RR" },
   { file: "estrela-do-norte-ap", name: "Estrela do Norte", uf: "AP" },
-  { file: "explode-coracao-ma", name: "Explode Coração", uf: "MA" },
-  { file: "explosao-amor-caipira-to", name: "Explosão Amor Caipira", uf: "TO" },
-  { file: "explosao-estrelar-pi", name: "Explosão Estrelar", uf: "PI" },
-  { file: "feijao-queimado-mg", name: "Feijão Queimado", uf: "MG" },
+  { file: "explode-coração-ma", name: "Explode Coração", uf: "MA" },
+  { file: "explosão-amor-caipira-to", name: "Explosão Amor Caipira", uf: "TO" },
+  { file: "explosão-estrelar-pi", name: "Explosão Estrelar", uf: "PI" },
+  { file: "feijão-queimado-mg", name: "Feijão Queimado", uf: "MG" },
   { file: "fogo-no-rabo-pa", name: "Fogo no Rabo", uf: "PA" },
   { file: "junina-girasol-ro", name: "Junina Girasol", uf: "RO" },
-  { file: "matutos-na-roca-ac", name: "Matutos na Roça", uf: "AC" },
-  { file: "moleka-sem-vergonha-pb", name: "Moleka Sem Vergonha", uf: "PB" },
+  { file: "matutos-na-roça-ac", name: "Matutos na Roça", uf: "AC" },
+  { file: "moleka-100-vergonha-pb", name: "Moleka 100 Vergonha", uf: "PB" },
   { file: "os-de-fora-mt", name: "Os de Fora", uf: "MT" },
-  { file: "padre-pina-rn", name: "Padre Pina", uf: "RN" },
+  { file: "padre-piná-rn", name: "Padre Piná", uf: "RN" },
   { file: "raio-de-sol-pe", name: "Raio de Sol", uf: "PE" },
   { file: "unidos-em-asa-branca-se", name: "Unidos em Asa Branca", uf: "SE" },
-  { file: "ze-testinha-ce", name: "Zé Testinha", uf: "CE" },
+  { file: "zé-testinha-ce", name: "Zé Testinha", uf: "CE" },
 ];
 
 const PhotoCarousel = () => {
