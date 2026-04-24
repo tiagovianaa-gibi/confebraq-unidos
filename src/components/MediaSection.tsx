@@ -47,43 +47,33 @@ const PhotoCarousel = () => {
   const scrollTo = useCallback((index: number) => api?.scrollTo(index), [api]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <Carousel
         setApi={setApi}
         opts={{ loop: true, align: "center" }}
         className="w-full"
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-3 sm:-ml-4">
           {photos.map((photo) => (
-            <CarouselItem key={photo.file}>
-              <div className="relative h-[70vh] max-h-[600px] overflow-hidden rounded-2xl bg-black">
-                {/* fundo desfocado para preencher as laterais */}
-                <img
-                  src={`/fotos/${photo.file}.jpg`}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40"
-                />
-                {/* foto principal sem corte */}
+            <CarouselItem
+              key={photo.file}
+              className="pl-3 sm:pl-4 basis-[78%] sm:basis-[52%] md:basis-[38%] lg:basis-[28%]"
+            >
+              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
                 <img
                   src={`/fotos/${photo.file}.jpg`}
                   alt={`${photo.name} — ${photo.uf}`}
-                  className="relative z-10 mx-auto h-full w-auto max-w-full object-contain"
+                  className="w-full h-full object-cover object-top"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 z-30 p-4 sm:p-6 flex items-end justify-between">
-                  <div>
-                    <span className="inline-block rounded-full bg-secondary/90 px-3 py-1 text-xs font-bold text-primary uppercase tracking-widest mb-2">
-                      {photo.uf}
-                    </span>
-                    <p className="text-white font-display font-bold text-lg sm:text-2xl drop-shadow">
-                      {photo.name}
-                    </p>
-                  </div>
-                  <div className="text-white/60 text-sm font-medium shrink-0">
-                    {current + 1} / {photos.length}
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <span className="inline-block rounded-full bg-secondary/90 px-2.5 py-0.5 text-xs font-bold text-primary uppercase tracking-widest mb-1.5">
+                    {photo.uf}
+                  </span>
+                  <p className="text-white font-display font-bold text-base leading-tight drop-shadow">
+                    {photo.name}
+                  </p>
                 </div>
               </div>
             </CarouselItem>
