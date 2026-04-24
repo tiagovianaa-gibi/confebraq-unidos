@@ -56,15 +56,23 @@ const PhotoCarousel = () => {
         <CarouselContent>
           {photos.map((photo) => (
             <CarouselItem key={photo.file}>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+              <div className="relative h-[70vh] max-h-[600px] overflow-hidden rounded-2xl bg-black">
+                {/* fundo desfocado para preencher as laterais */}
+                <img
+                  src={`/fotos/${photo.file}.jpg`}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40"
+                />
+                {/* foto principal sem corte */}
                 <img
                   src={`/fotos/${photo.file}.jpg`}
                   alt={`${photo.name} — ${photo.uf}`}
-                  className="w-full h-full object-cover"
+                  className="relative z-10 mx-auto h-full w-auto max-w-full object-contain"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex items-end justify-between">
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 z-30 p-4 sm:p-6 flex items-end justify-between">
                   <div>
                     <span className="inline-block rounded-full bg-secondary/90 px-3 py-1 text-xs font-bold text-primary uppercase tracking-widest mb-2">
                       {photo.uf}
