@@ -1,4 +1,123 @@
-import { Play } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Images, Play } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+
+const photos = [
+  { file: "arrastao-do-amor-pa", name: "Arrastão do Amor", uf: "PA" },
+  { file: "arroxa-o-no-df", name: "Arroxa o No", uf: "DF" },
+  { file: "balance-do-cerrado-go", name: "Balance do Cerrado", uf: "GO" },
+  { file: "eita-juino-rr", name: "Eita Juino", uf: "RR" },
+  { file: "estrela-do-norte-ap", name: "Estrela do Norte", uf: "AP" },
+  { file: "explode-coracao-ma", name: "Explode Coração", uf: "MA" },
+  { file: "explosao-amor-caipira-to", name: "Explosão Amor Caipira", uf: "TO" },
+  { file: "explosao-estrelar-pi", name: "Explosão Estrelar", uf: "PI" },
+  { file: "feijao-queimado-mg", name: "Feijão Queimado", uf: "MG" },
+  { file: "fogo-no-rabo-pa", name: "Fogo no Rabo", uf: "PA" },
+  { file: "junina-girasol-ro", name: "Junina Girasol", uf: "RO" },
+  { file: "matutos-na-roca-ac", name: "Matutos na Roça", uf: "AC" },
+  { file: "moleka-sem-vergonha-pb", name: "Moleka Sem Vergonha", uf: "PB" },
+  { file: "os-de-fora-mt", name: "Os de Fora", uf: "MT" },
+  { file: "padre-pina-rn", name: "Padre Pina", uf: "RN" },
+  { file: "raio-de-sol-pe", name: "Raio de Sol", uf: "PE" },
+  { file: "unidos-em-asa-branca-se", name: "Unidos em Asa Branca", uf: "SE" },
+  { file: "ze-testinha-ce", name: "Zé Testinha", uf: "CE" },
+];
+
+const PhotoCarousel = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => setCurrent(api.selectedScrollSnap()));
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    const interval = setInterval(() => api.scrollNext(), 4000);
+    return () => clearInterval(interval);
+  }, [api]);
+
+  const scrollTo = useCallback((index: number) => api?.scrollTo(index), [api]);
+
+  return (
+    <div className="space-y-4">
+      <Carousel
+        setApi={setApi}
+        opts={{ loop: true, align: "center" }}
+        className="w-full"
+      >
+        <CarouselContent>
+          {photos.map((photo) => (
+            <CarouselItem key={photo.file}>
+              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+                <img
+                  src={`/fotos/${photo.file}.jpg`}
+                  alt={`${photo.name} — ${photo.uf}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex items-end justify-between">
+                  <div>
+                    <span className="inline-block rounded-full bg-secondary/90 px-3 py-1 text-xs font-bold text-primary uppercase tracking-widest mb-2">
+                      {photo.uf}
+                    </span>
+                    <p className="text-white font-display font-bold text-lg sm:text-2xl drop-shadow">
+                      {photo.name}
+                    </p>
+                  </div>
+                  <div className="text-white/60 text-sm font-medium shrink-0">
+                    {current + 1} / {photos.length}
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      <div className="flex items-center justify-between gap-4">
+        <button
+          onClick={() => api?.scrollPrev()}
+          className="rounded-full border border-background/20 bg-background/10 p-2 text-background hover:bg-background/20 transition-colors"
+          aria-label="Foto anterior"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        <div className="flex gap-1.5 flex-wrap justify-center">
+          {photos.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => scrollTo(i)}
+              aria-label={`Ir para foto ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current
+                  ? "w-6 bg-secondary"
+                  : "w-1.5 bg-background/30 hover:bg-background/50"
+              }`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => api?.scrollNext()}
+          className="rounded-full border border-background/20 bg-background/10 p-2 text-background hover:bg-background/20 transition-colors"
+          aria-label="Próxima foto"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const MediaSection = () => {
   return (
@@ -15,7 +134,7 @@ const MediaSection = () => {
           <div className="w-24 h-1 gradient-warm mx-auto rounded-full mt-6" />
         </div>
 
-        <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-6 mb-16">
           <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
             <iframe
               src="https://www.youtube.com/embed/XDnXBkAMap4"
@@ -71,6 +190,19 @@ const MediaSection = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="border-t border-background/10 pt-16">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 text-secondary font-semibold text-sm uppercase tracking-widest mb-3">
+              <Images className="w-4 h-4" />
+              Galeria
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-display font-bold text-background">
+              Fotos do Concurso
+            </h3>
+          </div>
+          <PhotoCarousel />
         </div>
       </div>
     </section>
