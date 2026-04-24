@@ -37,7 +37,7 @@ const AffiliatesSection = () => {
             {affiliateEntities.map((affiliate) => (
               <Link
                 key={affiliate.sigla}
-                to={`/entidade/${affiliate.sigla}`}
+                to={`/entidade/${encodeURIComponent(affiliate.sigla)}`}
                 className="bg-card rounded-lg p-5 border border-border hover:shadow-md transition-all group flex items-start gap-4 cursor-pointer"
               >
                 <div className={`${regionColors[affiliate.uf] || "bg-primary"} text-accent-foreground w-11 h-11 rounded-lg flex items-center justify-center font-bold text-xs shrink-0`}>

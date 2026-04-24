@@ -12,7 +12,7 @@ const formatNumber = (value: number) => new Intl.NumberFormat("pt-BR").format(va
 
 const EntityPage = () => {
   const { sigla } = useParams<{ sigla: string }>();
-  const normalizedSigla = sigla?.trim().toUpperCase() || "";
+  const normalizedSigla = decodeURIComponent(sigla?.trim() || "").toUpperCase();
   const entity = normalizedSigla ? affiliateEntityBySigla[normalizedSigla] : null;
   const { entityReports } = useEntityRegistry();
 
