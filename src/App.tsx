@@ -8,6 +8,7 @@ import Panel from "./pages/Panel.tsx";
 import NewsPage from "./pages/NewsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import EntityPage from "./pages/EntityPage.tsx";
+import SimposioBrasilia from "./pages/SimposioBrasilia.tsx";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -27,6 +28,7 @@ const App = () => (
         <Route path="/painel" element={<Panel />} />
         <Route path="/noticia/:newsId" element={<NewsPage />} />
         <Route path="/entidade/:sigla" element={<EntityPage />} />
+        <Route path="/inscricao-simposio-brasilia" element={<SimposioBrasilia />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

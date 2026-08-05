@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   { label: "Início", href: "/#inicio" },
   { label: "Sobre", href: "/#sobre" },
+  { label: "Simpósio", href: "/inscricao-simposio-brasilia", highlight: true },
   { label: "Notícias", href: "/#noticias" },
   { label: "Mídia", href: "/#midia" },
   { label: "Filiadas", href: "/#filiadas" },
@@ -41,7 +42,11 @@ const Header = () => {
                 <a
                   key={item.href}
                   href={item.href}
-                  className="rounded-md px-4 py-2 text-sm font-medium text-primary-foreground/80 transition-colors hover:bg-primary-foreground/10 hover:text-secondary"
+                  className={
+                    item.highlight
+                      ? "rounded-md bg-secondary px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-secondary/90"
+                      : "rounded-md px-4 py-2 text-sm font-medium text-primary-foreground/80 transition-colors hover:bg-primary-foreground/10 hover:text-secondary"
+                  }
                 >
                   {item.label}
                 </a>
@@ -74,7 +79,11 @@ const Header = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-md px-4 py-3 text-sm font-medium text-primary-foreground/80 transition-colors hover:bg-primary-foreground/10 hover:text-secondary"
+                className={
+                  item.highlight
+                    ? "rounded-md bg-secondary px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-secondary/90"
+                    : "rounded-md px-4 py-3 text-sm font-medium text-primary-foreground/80 transition-colors hover:bg-primary-foreground/10 hover:text-secondary"
+                }
               >
                 {item.label}
               </a>
