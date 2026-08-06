@@ -1,15 +1,10 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, ExternalLink, MapPin } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import simposioCard from "@/assets/simposio-brasilia.png";
-
-const FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform?embedded=true";
-const FORM_PUBLIC_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform";
 
 const SimposioBrasilia = () => {
   useEffect(() => {
@@ -18,7 +13,7 @@ const SimposioBrasilia = () => {
     if (descriptionElement) {
       descriptionElement.setAttribute(
         "content",
-        "Inscreva-se no III Simpósio Nacional de Quadrilhas Juninas — Brasília/DF, 20, 21 e 22 de agosto.",
+        "III Simpósio Nacional de Quadrilhas Juninas — Brasília/DF, 20, 21 e 22 de agosto.",
       );
     }
   }, []);
@@ -53,7 +48,7 @@ const SimposioBrasilia = () => {
 
             <div className="text-primary-foreground">
               <p className="text-sm uppercase tracking-[0.3em] text-secondary">
-                Inscrições abertas
+                Anote na agenda
               </p>
               <h1 className="mt-4 font-display text-4xl sm:text-5xl font-black leading-tight">
                 III Simpósio Nacional de Quadrilhas Juninas
@@ -73,10 +68,7 @@ const SimposioBrasilia = () => {
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" variant="secondary">
-                  <a href="#inscricao">Fazer inscrição</a>
-                </Button>
+              <div className="mt-8">
                 <Button
                   asChild
                   size="lg"
@@ -91,39 +83,21 @@ const SimposioBrasilia = () => {
         </div>
       </section>
 
-      {/* Formulário */}
-      <main id="inscricao" className="bg-background py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-center">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
-              Formulário de inscrição
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Preencha o formulário abaixo para garantir a sua vaga. Se preferir,
-              abra o formulário em uma nova aba.
-            </p>
-          </div>
-
-          <div className="mb-6 flex justify-center">
-            <Button asChild variant="secondary">
-              <a href={FORM_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
-                Abrir formulário em nova aba
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-          </div>
-
-          <div className="overflow-hidden rounded-3xl border border-border bg-card">
-            <iframe
-              src={FORM_EMBED_URL}
-              title="Formulário de inscrição do III Simpósio Nacional de Quadrilhas Juninas"
-              className="w-full"
-              style={{ height: "1400px", border: "none" }}
-              loading="lazy"
-            >
-              Carregando…
-            </iframe>
-          </div>
+      {/* Sobre o evento */}
+      <main className="bg-background py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
+            Sobre o evento
+          </h2>
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+            O III Simpósio Nacional de Quadrilhas Juninas reúne entidades,
+            grupos e apaixonados pela cultura junina em Brasília, para três dias
+            de troca de experiências, valorização da tradição e fortalecimento do
+            movimento em todo o Brasil.
+          </p>
+          <p className="mt-6 text-base font-semibold text-foreground">
+            Em breve, mais informações e a abertura das inscrições.
+          </p>
         </div>
       </main>
 
