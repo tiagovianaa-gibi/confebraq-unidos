@@ -17,9 +17,9 @@ import FooterSection from "@/components/FooterSection";
 import simposioCard from "@/assets/simposio-brasilia.png";
 
 const FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform?embedded=true";
+  "https://docs.google.com/forms/d/1qn8o_kksQT72UPe817Sf-y_mWt1caNunzQJHepU85KQ/viewform?embedded=true";
 const FORM_PUBLIC_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform";
+  "https://docs.google.com/forms/d/1qn8o_kksQT72UPe817Sf-y_mWt1caNunzQJHepU85KQ/viewform";
 const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
 
 const juninaStrip = {
