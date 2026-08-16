@@ -26,18 +26,24 @@ const SimposioSection = () => {
             <h2 className="mt-4 font-display text-3xl sm:text-4xl font-black text-foreground leading-tight">
               III Simpósio Nacional de Quadrilhas Juninas
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Tradição que movimenta • Cultura que transforma
+            <p className="mt-4 text-lg font-semibold text-secondary">
+              Tradição que se reinventa: cultura, inovação e futuro do movimento junino
+            </p>
+            <p className="mt-4 text-muted-foreground">
+              Três dias de debates, palestras e construção coletiva da Carta de Brasília 2026,
+              reunindo o movimento junino de todo o Brasil na capital.
             </p>
 
             <div className="mt-6 space-y-3 text-foreground">
               <div className="flex items-center gap-3">
                 <CalendarDays className="h-5 w-5 text-secondary" />
-                <span className="font-semibold">20, 21 e 22 de agosto</span>
+                <span className="font-semibold">20, 21 e 22 de agosto de 2026</span>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-secondary" />
-                <span className="font-semibold">Brasília / DF</span>
+                <span className="font-semibold">
+                  Eixo Cultural Ibero-Americano — Brasília / DF
+                </span>
               </div>
             </div>
 
