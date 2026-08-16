@@ -13,6 +13,7 @@ interface Champion {
 }
 
 const champions: Champion[] = [
+  { year: 2026, champion: "Raio de Sol (PE)", vice: "Junina Lumiar (PI)", third: "Arroxa o Nó (DF)", city: "Canaã dos Carajás (PA)" },
   { year: 2025, champion: "Eita Junino (RR)", vice: "Raio de Sol (PE)", third: "ArraiÃ¡ ZÃ© Testinha (CE)", city: "CanaÃ£ dos CarajÃ¡s (PA)" },
   { year: 2024, champion: "Arroxa o NÃ³ (DF)", vice: "Amor Caipira (RR)", third: "Junina Lumiar (PE)", city: "Taguatinga (DF)" },
   { year: 2023, champion: "Junina Flor de Mandacaru (MA)", vice: "Formiga da RoÃ§a (DF)", third: "CafundÃ³ do Brejo (TO)", city: "CanaÃ£ dos CarajÃ¡s (PA)" },

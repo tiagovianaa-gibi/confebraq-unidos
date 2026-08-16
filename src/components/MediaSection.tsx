@@ -7,25 +7,27 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 
+// XX Circuito Nacional de Quadrilhas Juninas da CONFEBRAQ — Canaã dos Carajás/PA
+// Ordenadas pela classificação final de 2026.
 const photos = [
-  { file: "arrastão-do-amor-pa", name: "Arrastão do Amor", uf: "PA" },
-  { file: "arroxa-o-nó-df", name: "Arroxa o Nó", uf: "DF" },
-  { file: "balancê-do-cerrado-go", name: "Balancê do Cerrado", uf: "GO" },
-  { file: "eita-juino-rr", name: "Eita Juino", uf: "RR" },
-  { file: "estrela-do-norte-ap", name: "Estrela do Norte", uf: "AP" },
-  { file: "explode-coração-ma", name: "Explode Coração", uf: "MA" },
-  { file: "explosão-amor-caipira-to", name: "Explosão Amor Caipira", uf: "TO" },
-  { file: "explosão-estrelar-pi", name: "Explosão Estrelar", uf: "PI" },
-  { file: "feijão-queimado-mg", name: "Feijão Queimado", uf: "MG" },
-  { file: "fogo-no-rabo-pa", name: "Fogo no Rabo", uf: "PA" },
-  { file: "junina-girasol-ro", name: "Junina Girasol", uf: "RO" },
-  { file: "matutos-na-roça-ac", name: "Matutos na Roça", uf: "AC" },
-  { file: "moleka-100-vergonha-pb", name: "Moleka 100 Vergonha", uf: "PB" },
-  { file: "os-de-fora-mt", name: "Os de Fora", uf: "MT" },
-  { file: "padre-piná-rn", name: "Padre Piná", uf: "RN" },
-  { file: "raio-de-sol-pe", name: "Raio de Sol", uf: "PE" },
-  { file: "unidos-em-asa-branca-se", name: "Unidos em Asa Branca", uf: "SE" },
-  { file: "zé-testinha-ce", name: "Zé Testinha", uf: "CE" },
+  { file: "raio-de-sol-pe", name: "Raio de Sol", uf: "PE", rank: 1 },
+  { file: "junina-lumiar-pi", name: "Junina Lumiar", uf: "PI", rank: 2 },
+  { file: "arroxa-o-nó-df", name: "Arroxa o Nó", uf: "DF", rank: 3 },
+  { file: "moleka-100-vergonha-pb", name: "Moleka 100 Vergonha", uf: "PB", rank: 4 },
+  { file: "cafundó-do-brejo-to", name: "Cafundó do Brejo", uf: "TO", rank: 5 },
+  { file: "eita-junino-rr", name: "Eita Junino", uf: "RR", rank: 6 },
+  { file: "junina-cearense-ce", name: "Junina Cearense", uf: "CE", rank: 7 },
+  { file: "arrastão-do-amor-pa", name: "Arrastão do Amor", uf: "PA", rank: 8 },
+  { file: "uai-são-joão-go", name: "Uai São João", uf: "GO", rank: 9 },
+  { file: "arco-íris-do-cangaço-ma", name: "Arco-Íris do Cangaço", uf: "MA", rank: 10 },
+  { file: "unidos-em-asa-branca-se", name: "Unidos em Asa Branca", uf: "SE", rank: 11 },
+  { file: "flor-do-sertão-mt", name: "Flor do Sertão", uf: "MT", rank: 12 },
+  { file: "luar-do-sertão-ap", name: "Luar do Sertão", uf: "AP", rank: 13 },
+  { file: "fogo-de-palha-mg", name: "Fogo de Palha", uf: "MG", rank: 14 },
+  { file: "junina-evoé-pa", name: "Junina Evoé", uf: "PA", rank: 15 },
+  { file: "caipiras-da-mata-ba", name: "Caipiras da Mata", uf: "BA", rank: 16 },
+  { file: "juabp-ro", name: "Quadrilha JUABP", uf: "RO", rank: 17 },
+  { file: "sassaricano-na-roça-ac", name: "Sassaricano na Roça", uf: "AC", rank: 18 },
 ];
 
 const PhotoCarousel = () => {
@@ -67,6 +69,17 @@ const PhotoCarousel = () => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <span
+                    className={`flex h-9 w-9 items-center justify-center rounded-full font-display text-sm font-black shadow-md ${
+                      photo.rank <= 3
+                        ? "bg-secondary text-primary"
+                        : "bg-black/60 text-white"
+                    }`}
+                  >
+                    {photo.rank}º
+                  </span>
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <span className="inline-block rounded-full bg-secondary/90 px-2.5 py-0.5 text-xs font-bold text-primary uppercase tracking-widest mb-1.5">
                     {photo.uf}
@@ -197,8 +210,11 @@ const MediaSection = () => {
               Galeria
             </div>
             <h3 className="text-2xl sm:text-3xl font-display font-bold text-background">
-              Fotos do Concurso
+              Fotos do Concurso 2026
             </h3>
+            <p className="text-background/60 mt-2 text-sm">
+              XX Circuito Nacional de Quadrilhas Juninas — Canaã dos Carajás/PA · 11 e 12 de julho de 2026
+            </p>
           </div>
           <PhotoCarousel />
         </div>
