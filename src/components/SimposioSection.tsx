@@ -21,7 +21,7 @@ const SimposioSection = () => {
 
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-secondary">
-              Anote na agenda
+              Inscrições abertas
             </p>
             <h2 className="mt-4 font-display text-3xl sm:text-4xl font-black text-foreground leading-tight">
               III Simpósio Nacional de Quadrilhas Juninas
@@ -49,7 +49,7 @@ const SimposioSection = () => {
 
             <div className="mt-8">
               <Button asChild size="lg" variant="secondary">
-                <Link to="/inscricao-simposio-brasilia">Saiba mais</Link>
+                <Link to="/inscricao-simposio-brasilia">Fazer inscrição</Link>
               </Button>
             </div>
           </div>

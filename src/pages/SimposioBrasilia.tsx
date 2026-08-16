@@ -1,10 +1,26 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, MapPin, Mail, Target, Users, Layers } from "lucide-react";
+import {
+  CalendarDays,
+  MapPin,
+  Mail,
+  Target,
+  Users,
+  Layers,
+  ExternalLink,
+  Download,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import simposioCard from "@/assets/simposio-brasilia.png";
+
+const FORM_EMBED_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform?embedded=true";
+const FORM_PUBLIC_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdGpcyjMeNgRXdZG47eHbAbO6x68RQUNYxWd_mIfky74BHE9g/viewform";
+const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
 
 const juninaStrip = {
   background: `repeating-linear-gradient(90deg,
@@ -152,7 +168,7 @@ const SimposioBrasilia = () => {
 
             <div className="text-primary-foreground">
               <p className="text-sm uppercase tracking-[0.3em] text-secondary">
-                20 a 22 de agosto de 2026
+                Inscrições abertas
               </p>
               <h1 className="mt-4 font-display text-4xl sm:text-5xl font-black leading-tight">
                 III Simpósio Nacional de Quadrilhas Juninas
@@ -174,9 +190,9 @@ const SimposioBrasilia = () => {
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
                 <Button asChild size="lg" variant="secondary">
-                  <a href="#programacao">Ver programação</a>
+                  <a href="#inscricao">Fazer inscrição</a>
                 </Button>
                 <Button
                   asChild
@@ -184,7 +200,18 @@ const SimposioBrasilia = () => {
                   variant="outline"
                   className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
                 >
-                  <Link to="/">Voltar ao site</Link>
+                  <a href={MANUAL_URL} target="_blank" rel="noopener noreferrer">
+                    <Download className="h-4 w-4" />
+                    Manual do participante
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+                >
+                  <a href="#programacao">Ver programação</a>
                 </Button>
               </div>
             </div>
@@ -215,6 +242,71 @@ const SimposioBrasilia = () => {
             movimento junino — culminando na redação coletiva da{" "}
             <strong className="text-foreground">Carta de Brasília 2026</strong>.
           </p>
+        </div>
+      </section>
+
+      {/* Manual do participante */}
+      <section className="bg-muted py-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center gap-6 rounded-3xl border border-border bg-card p-8 text-center sm:flex-row sm:text-left">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <FileText className="h-8 w-8" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-display text-2xl font-bold text-foreground">
+                Manual do Participante
+              </h2>
+              <p className="mt-2 text-muted-foreground">
+                Programação completa, eixos temáticos, orientações e informações
+                úteis sobre o evento e sobre Brasília.
+              </p>
+            </div>
+            <Button asChild size="lg" className="shrink-0">
+              <a href={MANUAL_URL} target="_blank" rel="noopener noreferrer">
+                <Download className="h-4 w-4" />
+                Baixar (PDF)
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Inscrição */}
+      <section id="inscricao" className="bg-background py-20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <span className="text-sm uppercase tracking-[0.3em] text-secondary">
+              Inscrições abertas
+            </span>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold text-foreground">
+              Faça a sua inscrição
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Preencha o formulário abaixo para garantir a sua vaga. Se preferir,
+              abra o formulário em uma nova aba.
+            </p>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="secondary">
+              <a href={FORM_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
+                Abrir formulário em nova aba
+                <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          </div>
+
+          <div className="mt-8 overflow-hidden rounded-3xl border border-border bg-card">
+            <iframe
+              src={FORM_EMBED_URL}
+              title="Formulário de inscrição do III Simpósio Nacional de Quadrilhas Juninas"
+              className="w-full"
+              style={{ height: "1400px", border: "none" }}
+              loading="lazy"
+            >
+              Carregando…
+            </iframe>
+          </div>
         </div>
       </section>
 
@@ -344,9 +436,11 @@ const SimposioBrasilia = () => {
             </div>
           </div>
 
-          <p className="mt-10 text-center text-base font-semibold text-foreground">
-            Em breve, mais informações e a abertura das inscrições.
-          </p>
+          <div className="mt-10 text-center">
+            <Button asChild size="lg" variant="secondary">
+              <a href="#inscricao">Fazer inscrição</a>
+            </Button>
+          </div>
         </div>
       </section>
 
