@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CalendarDays, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import simposioCard from "@/assets/simposio-brasilia.png";
+import simposioCard from "@/assets/simposio-brasilia.jpg";
 
 const SimposioSection = () => {
   return (

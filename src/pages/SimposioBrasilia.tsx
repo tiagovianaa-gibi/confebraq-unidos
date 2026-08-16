@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
-import simposioCard from "@/assets/simposio-brasilia.png";
+import simposioCard from "@/assets/simposio-brasilia.jpg";
 
 const FORM_EMBED_URL =
   "https://docs.google.com/forms/d/1qn8o_kksQT72UPe817Sf-y_mWt1caNunzQJHepU85KQ/viewform?embedded=true";
