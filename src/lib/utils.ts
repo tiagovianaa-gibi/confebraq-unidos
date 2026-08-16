@@ -20,7 +20,6 @@ const ENCODING_REPAIRS = new Map<string, string>([
   ["Ã´", "ô"],
   ["Ãµ", "õ"],
   ["Ãº", "ú"],
-  ["Ã", "Á"],
   ["Ã‚", "Â"],
   ["Ãƒ", "Ã"],
   ["Ã‡", "Ç"],
@@ -43,6 +42,12 @@ const ENCODING_REPAIRS = new Map<string, string>([
 ]);
 
 const COMMON_TEXT_REPAIRS = new Map<string, string>([
+  // Fonte com "Á" (agudo) onde deveria ser "Ã" (til): "Ç" seguido de "Á"
+  // nunca ocorre em português, então a troca é segura (fundação, confederação…).
+  ["ÇÁ", "ÇÃ"],
+  ["çá", "çã"],
+  ["CANAÁ", "CANAÃ"],
+  ["Canaá", "Canaã"],
   ["Organiza��o", "Organização"],
   ["Confedera��o", "Confederação"],
   ["Presta��o", "Prestação"],
