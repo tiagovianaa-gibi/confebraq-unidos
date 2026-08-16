@@ -20,10 +20,6 @@ service firebase.storage {
       return /databases/(default)/documents/panelAccess/$(request.auth.token.email);
     }
 
-    function emailAccessPathLowerCase() {
-      return /databases/(default)/documents/panelAccess/$(request.auth.token.email.toLowerCase());
-    }
-
     function hasUidAccessProfile() {
       return isSignedIn() &&
         firestore.exists(userAccessPath(request.auth.uid));
@@ -31,15 +27,13 @@ service firebase.storage {
 
     function hasEmailAccessProfile() {
       return hasUserEmail() &&
-        (firestore.exists(emailAccessPath()) || firestore.exists(emailAccessPathLowerCase()));
+        firestore.exists(emailAccessPath());
     }
 
     function currentUserAccess() {
       return hasUidAccessProfile()
         ? firestore.get(userAccessPath(request.auth.uid)).data
-        : firestore.exists(emailAccessPath())
-        ? firestore.get(emailAccessPath()).data
-        : firestore.get(emailAccessPathLowerCase()).data;
+        : firestore.get(emailAccessPath()).data;
     }
 
     function isPanelAdmin() {
