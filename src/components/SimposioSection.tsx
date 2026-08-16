@@ -9,7 +9,7 @@ const SimposioSection = () => {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Link
-            to="/inscricao-simposio-brasilia"
+            to="/simposio-brasilia"
             className="block overflow-hidden rounded-3xl border border-border shadow-xl transition-transform hover:scale-[1.02]"
           >
             <img
@@ -49,7 +49,7 @@ const SimposioSection = () => {
 
             <div className="mt-8">
               <Button asChild size="lg" variant="secondary">
-                <Link to="/inscricao-simposio-brasilia">Fazer inscrição</Link>
+                <Link to="/simposio-brasilia">Fazer inscrição</Link>
               </Button>
             </div>
           </div>

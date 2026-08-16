@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,7 +28,11 @@ const App = () => (
         <Route path="/painel" element={<Panel />} />
         <Route path="/noticia/:newsId" element={<NewsPage />} />
         <Route path="/entidade/:sigla" element={<EntityPage />} />
-        <Route path="/inscricao-simposio-brasilia" element={<SimposioBrasilia />} />
+        <Route path="/simposio-brasilia" element={<SimposioBrasilia />} />
+        <Route
+          path="/inscricao-simposio-brasilia"
+          element={<Navigate to="/simposio-brasilia" replace />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
