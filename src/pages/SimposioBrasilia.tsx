@@ -7,19 +7,21 @@ import {
   Target,
   Users,
   Layers,
-  ExternalLink,
   Download,
   FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import simposioCard from "@/assets/simposio-brasilia.jpg";
 
-const FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/1qn8o_kksQT72UPe817Sf-y_mWt1caNunzQJHepU85KQ/viewform?embedded=true";
-const FORM_PUBLIC_URL =
-  "https://docs.google.com/forms/d/1qn8o_kksQT72UPe817Sf-y_mWt1caNunzQJHepU85KQ/viewform";
 const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
 
 const juninaStrip = {
@@ -57,6 +59,63 @@ const eixos = [
   {
     titulo: "Tecnologia, Comunicação e Presença Digital no Movimento Junino",
     palestrantes: "Prof. Dr. Alexandre Kieling (DF)",
+  },
+];
+
+const PALESTRAS_BASE = "/simposio/palestras";
+const CARDS_BASE = "/simposio/cards";
+
+type Material = {
+  nome: string;
+  titulacao?: string;
+  uf: string;
+  slug: string;
+  card?: boolean; // possui card ilustrado em /simposio/cards/{slug}.jpg
+  pdf?: boolean; // possui apresentação em /simposio/palestras/{slug}.pdf
+};
+
+type EixoMaterial = { eixo: string; palestrantes: Material[] };
+
+const materiais: EixoMaterial[] = [
+  {
+    eixo: "Economia Criativa e Sustentabilidade Financeira do Movimento Junino",
+    palestrantes: [
+      { nome: "Luara Aquino", titulacao: "Profª. Ma.", uf: "TO", slug: "luara-aquino", card: true, pdf: true },
+      { nome: "Ademir Souza", uf: "BA", slug: "ademir-souza", card: true, pdf: true },
+    ],
+  },
+  {
+    eixo: "Estética, Inovação e Espetacularização dos Festivais Juninos",
+    palestrantes: [
+      { nome: "Hipólito Lucena", titulacao: "Prof. Me.", uf: "PB", slug: "hipolito-lucena", card: true, pdf: true },
+      { nome: "Samuel Zaratim", titulacao: "Prof. Dr.", uf: "GO", slug: "samuel-zaratim", card: true, pdf: true },
+    ],
+  },
+  {
+    eixo: "Tradição em Movimento: Identidade, Memória e Narrativas Contemporâneas",
+    palestrantes: [
+      { nome: "Larissa Vargas", titulacao: "Profª. Ma.", uf: "DF", slug: "larissa-vargas", card: true, pdf: true },
+      { nome: "Marco Teixeira", titulacao: "Prof. Dr.", uf: "RO", slug: "marco-teixeira" },
+      { nome: "Walter Cedro", uf: "DF", slug: "walter-cedro", card: true },
+    ],
+  },
+  {
+    eixo: "Concursos e Circuitos Competitivos",
+    palestrantes: [
+      { nome: "Fabrício Alencar", titulacao: "Prof. Me.", uf: "CE", slug: "fabricio-alencar", card: true },
+    ],
+  },
+  {
+    eixo: "Formação, Inclusão e Desenvolvimento Humano nas Quadrilhas",
+    palestrantes: [
+      { nome: "Eduardo Madeiro", titulacao: "Prof. Me.", uf: "RJ", slug: "eduardo-madeiro", card: true, pdf: true },
+    ],
+  },
+  {
+    eixo: "Tecnologia, Comunicação e Presença Digital no Movimento Junino",
+    palestrantes: [
+      { nome: "Alexandre Kieling", titulacao: "Prof. Dr.", uf: "DF", slug: "alexandre-kieling", card: true, pdf: true },
+    ],
   },
 ];
 
@@ -168,7 +227,7 @@ const SimposioBrasilia = () => {
 
             <div className="text-primary-foreground">
               <p className="text-sm uppercase tracking-[0.3em] text-secondary">
-                Inscrições abertas
+                Evento realizado
               </p>
               <h1 className="mt-4 font-display text-4xl sm:text-5xl font-black leading-tight">
                 III Simpósio Nacional de Quadrilhas Juninas
@@ -192,7 +251,10 @@ const SimposioBrasilia = () => {
 
               <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
                 <Button asChild size="lg" variant="secondary">
-                  <a href="#inscricao">Fazer inscrição</a>
+                  <a href="#materiais">
+                    <FileText className="h-4 w-4" />
+                    Materiais das palestras
+                  </a>
                 </Button>
                 <Button
                   asChild
@@ -232,14 +294,14 @@ const SimposioBrasilia = () => {
           <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
             Promovido pela Confederação Brasileira de Entidades de Quadrilhas Juninas
             (CONFEBRAQ), com a Liga Independente de Quadrilhas Juninas do Distrito Federal e
-            Entorno (LINQDFE) como entidade anfitriã, o III Simpósio reúne federações,
+            Entorno (LINQDFE) como entidade anfitriã, o III Simpósio reuniu federações,
             gestores públicos, pesquisadores, produtores culturais, coreógrafos, brincantes e
             artistas de todo o Brasil.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            São três dias de debate técnico, acadêmico e institucional sobre a salvaguarda, o
+            Foram três dias de debate técnico, acadêmico e institucional sobre a salvaguarda, o
             financiamento, a espetacularização, a governança e o desenvolvimento social do
-            movimento junino — culminando na redação coletiva da{" "}
+            movimento junino — que culminaram na redação coletiva da{" "}
             <strong className="text-foreground">Carta de Brasília 2026</strong>.
           </p>
         </div>
@@ -271,42 +333,128 @@ const SimposioBrasilia = () => {
         </div>
       </section>
 
-      {/* Inscrição */}
-      <section id="inscricao" className="bg-background py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-secondary">
-              Inscrições abertas
-            </span>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold text-foreground">
-              Faça a sua inscrição
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Preencha o formulário abaixo para garantir a sua vaga. Se preferir,
-              abra o formulário em uma nova aba.
-            </p>
+      {/* Materiais das palestras */}
+      <section id="materiais" className="bg-background py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-3 text-secondary">
+            <FileText className="h-6 w-6" />
+            <span className="text-sm uppercase tracking-[0.3em]">Materiais das palestras</span>
+          </div>
+          <h2 className="mt-4 text-center font-display text-3xl sm:text-4xl font-bold text-foreground">
+            Registro e material de apoio
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+            Conheça os palestrantes por eixo temático: clique em cada card para ler a minibiografia
+            e, quando disponível, abra a apresentação em PDF. Material de apoio aos participantes e
+            registro histórico do evento.
+          </p>
+
+          <div className="mt-12 space-y-10">
+            {materiais.map((grupo, i) => (
+              <div key={grupo.eixo}>
+                <div className="flex items-baseline gap-3">
+                  <span className="font-display text-2xl font-black text-secondary">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-lg font-bold text-foreground">{grupo.eixo}</h3>
+                </div>
+
+                <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {grupo.palestrantes.map((p) => {
+                    const nomeCompleto = [p.titulacao, p.nome].filter(Boolean).join(" ");
+                    const cardHref = `${CARDS_BASE}/${p.slug}.jpg`;
+                    const pdfHref = `${PALESTRAS_BASE}/${p.slug}.pdf`;
+
+                    return (
+                      <div
+                        key={p.slug}
+                        className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
+                      >
+                        {p.card ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button
+                                type="button"
+                                className="relative block w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                                aria-label={`Ver card de ${nomeCompleto}`}
+                              >
+                                <img
+                                  src={cardHref}
+                                  alt={`Card do palestrante ${nomeCompleto}`}
+                                  loading="lazy"
+                                  className="aspect-[4/5] w-full object-cover object-top"
+                                />
+                                <span className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/60 via-black/0 to-transparent p-4 text-sm font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+                                  Ver card completo
+                                </span>
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-lg overflow-hidden p-0">
+                              <DialogTitle className="sr-only">{nomeCompleto}</DialogTitle>
+                              <DialogDescription className="sr-only">
+                                Card do palestrante {nomeCompleto} — {p.uf}
+                              </DialogDescription>
+                              <img
+                                src={cardHref}
+                                alt={`Card do palestrante ${nomeCompleto}`}
+                                className="h-auto w-full"
+                              />
+                              <div className="flex items-center justify-between gap-3 border-t border-border p-4">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                  {p.uf}
+                                </span>
+                                {p.pdf ? (
+                                  <Button asChild size="sm">
+                                    <a href={pdfHref} target="_blank" rel="noopener noreferrer">
+                                      <Download className="h-4 w-4" />
+                                      Abrir apresentação (PDF)
+                                    </a>
+                                  </Button>
+                                ) : (
+                                  <span className="text-sm text-muted-foreground">
+                                    Sem apresentação disponibilizada
+                                  </span>
+                                )}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <div className="flex aspect-[4/5] flex-col items-center justify-center bg-muted p-6 text-center">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-background text-muted-foreground">
+                              <Users className="h-7 w-7" />
+                            </div>
+                            <p className="mt-4 font-display font-bold text-foreground">{nomeCompleto}</p>
+                            <p className="mt-1 text-sm text-muted-foreground">{p.uf}</p>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between gap-2 border-t border-border p-3">
+                          <span className="truncate text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            {p.uf}
+                          </span>
+                          {p.pdf ? (
+                            <Button asChild size="sm" variant="secondary">
+                              <a href={pdfHref} target="_blank" rel="noopener noreferrer">
+                                <Download className="h-4 w-4" />
+                                Apresentação (PDF)
+                              </a>
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Sem apresentação</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-6 flex justify-center">
-            <Button asChild variant="secondary">
-              <a href={FORM_PUBLIC_URL} target="_blank" rel="noopener noreferrer">
-                Abrir formulário em nova aba
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-3xl border border-border bg-card">
-            <iframe
-              src={FORM_EMBED_URL}
-              title="Formulário de inscrição do III Simpósio Nacional de Quadrilhas Juninas"
-              className="w-full"
-              style={{ height: "1400px", border: "none" }}
-              loading="lazy"
-            >
-              Carregando…
-            </iframe>
-          </div>
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            O conteúdo das apresentações é de responsabilidade e autoria de cada palestrante e foi
+            disponibilizado para fins de estudo e registro.
+          </p>
         </div>
       </section>
 
@@ -318,7 +466,7 @@ const SimposioBrasilia = () => {
             <span className="text-sm uppercase tracking-[0.3em]">Eixos temáticos</span>
           </div>
           <h2 className="mt-4 text-center font-display text-3xl sm:text-4xl font-bold text-foreground">
-            O que será debatido
+            O que foi debatido
           </h2>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -438,7 +586,10 @@ const SimposioBrasilia = () => {
 
           <div className="mt-10 text-center">
             <Button asChild size="lg" variant="secondary">
-              <a href="#inscricao">Fazer inscrição</a>
+              <a href="#materiais">
+                <FileText className="h-4 w-4" />
+                Materiais das palestras
+              </a>
             </Button>
           </div>
         </div>
