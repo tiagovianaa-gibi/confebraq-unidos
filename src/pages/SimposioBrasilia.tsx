@@ -9,6 +9,10 @@ import {
   Layers,
   Download,
   FileText,
+  ScrollText,
+  Quote,
+  MapPinned,
+  UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,8 +25,29 @@ import {
 import Header from "@/components/Header";
 import FooterSection from "@/components/FooterSection";
 import simposioCard from "@/assets/simposio-brasilia.jpg";
+import {
+  cartaPreambulo,
+  cartaEixos,
+  cartaProvocacaoTitulo,
+  cartaProvocacao,
+  cartaPergunta,
+  cartaFecho,
+  cartaEncerramento,
+  cartaLocalData,
+  cartaAssinatura,
+} from "@/data/cartaBrasilia2026";
 
 const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
+const CARTA_URL = "/documentos/carta-de-brasilia-2026.pdf";
+
+const numeros = [
+  { valor: "3", rotulo: "dias de programação", icon: CalendarDays },
+  { valor: "17 + DF", rotulo: "estados representados", icon: MapPinned },
+  { valor: "+300", rotulo: "delegados", icon: Users },
+  { valor: "+500", rotulo: "participantes", icon: UsersRound },
+  { valor: "9", rotulo: "palestrantes", icon: Layers },
+  { valor: "1", rotulo: "Carta de Brasília 2026", icon: ScrollText },
+];
 
 const juninaStrip = {
   background: `repeating-linear-gradient(90deg,
@@ -45,8 +70,7 @@ const eixos = [
   },
   {
     titulo: "Tradição em Movimento: Identidade, Memória e Narrativas Contemporâneas",
-    palestrantes:
-      "Prof. Dr. Marco Teixeira (RO) • Profª. Ma. Larissa Vargas (DF) • Walter Cedro (DF)",
+    palestrantes: "Profª. Ma. Larissa Vargas (DF) • Walter Cedro (DF)",
   },
   {
     titulo: "Concursos e Circuitos Competitivos",
@@ -95,7 +119,6 @@ const materiais: EixoMaterial[] = [
     eixo: "Tradição em Movimento: Identidade, Memória e Narrativas Contemporâneas",
     palestrantes: [
       { nome: "Larissa Vargas", titulacao: "Profª. Ma.", uf: "DF", slug: "larissa-vargas", card: true, pdf: true },
-      { nome: "Marco Teixeira", titulacao: "Prof. Dr.", uf: "RO", slug: "marco-teixeira" },
       { nome: "Walter Cedro", uf: "DF", slug: "walter-cedro", card: true },
     ],
   },
@@ -136,8 +159,7 @@ const programacao: { dia: string; data: string; itens: Atividade[] }[] = [
       {
         horario: "17h30 – 20h",
         titulo: "Palestras dos Eixos Temáticos",
-        detalhe:
-          "Economia Criativa (Luara Aquino) • Tradição em Movimento (Marco Teixeira)",
+        detalhe: "Economia Criativa (Luara Aquino)",
       },
       {
         horario: "20h – 22h",
@@ -251,9 +273,9 @@ const SimposioBrasilia = () => {
 
               <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4">
                 <Button asChild size="lg" variant="secondary">
-                  <a href="#materiais">
-                    <FileText className="h-4 w-4" />
-                    Materiais das palestras
+                  <a href="#carta">
+                    <ScrollText className="h-4 w-4" />
+                    Ler a Carta de Brasília
                   </a>
                 </Button>
                 <Button
@@ -262,9 +284,9 @@ const SimposioBrasilia = () => {
                   variant="outline"
                   className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
                 >
-                  <a href={MANUAL_URL} target="_blank" rel="noopener noreferrer">
-                    <Download className="h-4 w-4" />
-                    Manual do participante
+                  <a href="#materiais">
+                    <FileText className="h-4 w-4" />
+                    Materiais das palestras
                   </a>
                 </Button>
                 <Button
@@ -277,6 +299,31 @@ const SimposioBrasilia = () => {
                 </Button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* O Simpósio em números */}
+      <section className="bg-secondary py-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-display text-sm uppercase tracking-[0.3em] text-secondary-foreground/70">
+            O Simpósio em números
+          </h2>
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            {numeros.map((n) => (
+              <div
+                key={n.rotulo}
+                className="flex flex-col items-center rounded-2xl bg-secondary-foreground/5 p-5 text-center text-secondary-foreground"
+              >
+                <n.icon className="h-6 w-6 opacity-70" />
+                <span className="mt-3 font-display text-3xl font-black leading-none sm:text-4xl">
+                  {n.valor}
+                </span>
+                <span className="mt-2 text-xs font-semibold uppercase tracking-wide opacity-80">
+                  {n.rotulo}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -537,6 +584,106 @@ const SimposioBrasilia = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Carta de Brasília 2026 */}
+      <section id="carta" className="bg-primary py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-primary-foreground">
+            <div className="flex items-center justify-center gap-3 text-secondary">
+              <ScrollText className="h-6 w-6" />
+              <span className="text-sm uppercase tracking-[0.3em]">Documento final</span>
+            </div>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold">
+              Carta de Brasília 2026
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">
+              Deliberações e proposições aprovadas coletivamente na Plenária Final do III Simpósio
+              Nacional de Quadrilhas Juninas, em 22 de agosto de 2026, dirigidas ao poder público
+              como agenda permanente de políticas para o movimento junino.
+            </p>
+            <div className="mt-8">
+              <Button asChild size="lg" variant="secondary">
+                <a href={CARTA_URL} target="_blank" rel="noopener noreferrer">
+                  <Download className="h-4 w-4" />
+                  Baixar a Carta (PDF)
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          {/* Documento */}
+          <article className="mt-10 overflow-hidden rounded-3xl bg-card shadow-2xl">
+            <div className="h-2" style={juninaStrip} />
+            <div className="p-6 sm:p-10">
+              <div className="space-y-4 text-justify leading-relaxed text-muted-foreground">
+                {cartaPreambulo.map((par, i) => (
+                  <p key={`pre-${i}`}>{par}</p>
+                ))}
+              </div>
+
+              {cartaEixos.map((eixo) => (
+                <div key={eixo.titulo} className="mt-10">
+                  <h3 className="font-display text-lg font-bold text-primary">{eixo.titulo}</h3>
+                  <div className="mt-4 space-y-5">
+                    {eixo.propostas.map((prop) => (
+                      <div
+                        key={prop.nome}
+                        className="border-l-2 border-secondary/60 pl-4"
+                      >
+                        <h4 className="font-semibold text-foreground">{prop.nome}</h4>
+                        <p className="mt-1 text-justify leading-relaxed text-muted-foreground">
+                          {prop.texto}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="mt-10">
+                <h3 className="font-display text-lg font-bold text-primary">
+                  {cartaProvocacaoTitulo}
+                </h3>
+                <div className="mt-4 space-y-4 text-justify leading-relaxed text-muted-foreground">
+                  {cartaProvocacao.slice(0, 3).map((par, i) => (
+                    <p key={`prov-a-${i}`}>{par}</p>
+                  ))}
+                </div>
+
+                <blockquote className="my-6 rounded-2xl border-l-4 border-secondary bg-muted p-5">
+                  <Quote className="h-6 w-6 text-secondary" />
+                  <p className="mt-2 font-display text-lg font-semibold italic text-foreground">
+                    {cartaPergunta}
+                  </p>
+                </blockquote>
+
+                <div className="space-y-4 text-justify leading-relaxed text-muted-foreground">
+                  {cartaProvocacao.slice(3).map((par, i) => (
+                    <p key={`prov-b-${i}`}>{par}</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-4 text-justify leading-relaxed text-muted-foreground">
+                {cartaFecho.map((par, i) => (
+                  <p key={`fecho-${i}`}>{par}</p>
+                ))}
+              </div>
+
+              <p className="mt-6 font-display text-lg font-bold text-foreground">
+                {cartaEncerramento}
+              </p>
+
+              <div className="mt-10 border-t border-border pt-6 text-center">
+                <p className="font-semibold text-foreground">{cartaLocalData}</p>
+                <p className="mt-1 text-sm uppercase tracking-widest text-secondary">
+                  {cartaAssinatura}
+                </p>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
