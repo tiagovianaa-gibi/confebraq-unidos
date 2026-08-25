@@ -38,7 +38,6 @@ import {
 } from "@/data/cartaBrasilia2026";
 
 const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
-const CARTA_URL = "/documentos/carta-de-brasilia-2026.pdf";
 
 const numeros = [
   { valor: "3", rotulo: "dias de programação", icon: CalendarDays },
@@ -603,14 +602,6 @@ const SimposioBrasilia = () => {
               Nacional de Quadrilhas Juninas, em 22 de agosto de 2026, dirigidas ao poder público
               como agenda permanente de políticas para o movimento junino.
             </p>
-            <div className="mt-8">
-              <Button asChild size="lg" variant="secondary">
-                <a href={CARTA_URL} target="_blank" rel="noopener noreferrer">
-                  <Download className="h-4 w-4" />
-                  Baixar a Carta (PDF)
-                </a>
-              </Button>
-            </div>
           </div>
 
           {/* Documento */}
