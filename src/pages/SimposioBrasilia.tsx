@@ -13,8 +13,10 @@ import {
   Quote,
   MapPinned,
   UsersRound,
+  Camera,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GaleriaSimposio from "@/components/GaleriaSimposio";
 import {
   Dialog,
   DialogContent,
@@ -227,6 +229,20 @@ const SimposioBrasilia = () => {
         "III Simpósio Nacional de Quadrilhas Juninas — Brasília/DF, 20 a 22 de agosto de 2026. Tradição que se reinventa: cultura, inovação e futuro do movimento junino.",
       );
     }
+
+    // Ao chegar via link com âncora (ex.: /simposio-brasilia#galeria), rola até
+    // a seção assim que ela estiver no DOM — tentando por alguns frames.
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    let tries = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" });
+      else if (tries++ < 30) timer = setTimeout(tryScroll, 50);
+    };
+    tryScroll();
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -286,6 +302,17 @@ const SimposioBrasilia = () => {
                   <a href="#materiais">
                     <FileText className="h-4 w-4" />
                     Materiais das palestras
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+                >
+                  <a href="#galeria">
+                    <Camera className="h-4 w-4" />
+                    Galeria de fotos
                   </a>
                 </Button>
                 <Button
@@ -583,6 +610,31 @@ const SimposioBrasilia = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Galeria de fotos */}
+      <section id="galeria" className="bg-muted py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-3 text-secondary">
+            <Camera className="h-6 w-6" />
+            <span className="text-sm uppercase tracking-[0.3em]">Registro fotográfico</span>
+          </div>
+          <h2 className="mt-4 text-center font-display text-3xl sm:text-4xl font-bold text-foreground">
+            Galeria do III Simpósio
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+            Os momentos que marcaram os três dias de encontro em Brasília. Clique em qualquer
+            imagem para ampliar e navegar por todas as fotos.
+          </p>
+
+          <div className="mt-12">
+            <GaleriaSimposio />
+          </div>
+
+          <p className="mt-8 text-center text-sm text-muted-foreground">
+            Fotos: Marcello Candido
+          </p>
         </div>
       </section>
 

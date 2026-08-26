@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, MapPin, Camera, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GaleriaSimposio from "@/components/GaleriaSimposio";
 import simposioCard from "@/assets/simposio-brasilia.jpg";
 
 const SimposioSection = () => {
@@ -52,6 +53,32 @@ const SimposioSection = () => {
                 <Link to="/simposio-brasilia">Ver materiais e registro</Link>
               </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Galeria — prévia */}
+        <div className="mt-16">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="flex items-center gap-3 text-secondary">
+                <Camera className="h-5 w-5" />
+                <span className="text-sm uppercase tracking-[0.3em]">Registro fotográfico</span>
+              </div>
+              <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-foreground">
+                Galeria do III Simpósio
+              </h3>
+            </div>
+            <Link
+              to="/simposio-brasilia#galeria"
+              className="inline-flex items-center gap-2 font-semibold text-primary hover:text-secondary"
+            >
+              Ver todas as 60 fotos
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-8">
+            <GaleriaSimposio limite={8} />
           </div>
         </div>
       </div>

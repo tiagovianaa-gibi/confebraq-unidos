@@ -11,8 +11,14 @@ import EntityPage from "./pages/EntityPage.tsx";
 import SimposioBrasilia from "./pages/SimposioBrasilia.tsx";
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    // Rola até o topo em troca de rota; âncoras entre páginas (com hash) são
+    // tratadas pela própria página de destino após montar seu conteúdo.
+    // Checa window.location.hash (além do hash do router) para não sobrescrever
+    // uma rolagem até âncora quando a navegação inclui um #fragmento.
+    if (!hash && !window.location.hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
   return null;
 };
 
