@@ -18,6 +18,12 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import GaleriaSimposio from "@/components/GaleriaSimposio";
 import {
   Dialog,
@@ -71,33 +77,6 @@ const juninaStrip = {
     hsl(25 90% 55%) 120px, hsl(25 90% 55%) 150px
   )`,
 };
-
-const eixos = [
-  {
-    titulo: "Economia Criativa e Sustentabilidade Financeira do Movimento Junino",
-    palestrantes: "Profª. Ma. Luara Aquino (TO) • Ademir Souza (BA)",
-  },
-  {
-    titulo: "Estética, Inovação e Espetacularização dos Festivais Juninos",
-    palestrantes: "Prof. Dr. Samuel Zaratim (GO) • Prof. Me. Hipólito Lucena (PB)",
-  },
-  {
-    titulo: "Tradição em Movimento: Identidade, Memória e Narrativas Contemporâneas",
-    palestrantes: "Profª. Ma. Larissa Vargas (DF) • Walter Cedro (DF)",
-  },
-  {
-    titulo: "Concursos e Circuitos Competitivos",
-    palestrantes: "Prof. Me. Fabrício Alencar (CE)",
-  },
-  {
-    titulo: "Formação, Inclusão e Desenvolvimento Humano nas Quadrilhas",
-    palestrantes: "Prof. Me. Eduardo Madeiro (RJ)",
-  },
-  {
-    titulo: "Tecnologia, Comunicação e Presença Digital no Movimento Junino",
-    palestrantes: "Prof. Dr. Alexandre Kieling (DF)",
-  },
-];
 
 const PALESTRAS_BASE = "/simposio/palestras";
 const CARDS_BASE = "/simposio/cards";
@@ -554,36 +533,6 @@ const SimposioBrasilia = () => {
         </div>
       </section>
 
-      {/* Eixos temáticos */}
-      <section className="bg-muted py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center gap-3 text-secondary">
-            <Layers className="h-6 w-6" />
-            <span className="text-sm uppercase tracking-[0.3em]">Eixos temáticos</span>
-          </div>
-          <h2 className="mt-4 text-center font-display text-3xl sm:text-4xl font-bold text-foreground">
-            O que foi debatido
-          </h2>
-
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {eixos.map((eixo, i) => (
-              <div
-                key={eixo.titulo}
-                className="flex flex-col rounded-3xl border border-border bg-card p-6 shadow-sm"
-              >
-                <span className="font-display text-3xl font-black text-secondary">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-display text-lg font-bold text-foreground">
-                  {eixo.titulo}
-                </h3>
-                <p className="mt-3 text-sm text-muted-foreground">{eixo.palestrantes}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Programação */}
       <section id="programacao" className="bg-background py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -711,42 +660,51 @@ const SimposioBrasilia = () => {
                 <h3 className="font-display text-lg font-bold text-primary">
                   2. Eixos temáticos e sínteses
                 </h3>
-                <div className="mt-6 space-y-8">
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Toque em cada eixo para ler a síntese dos debates e as propostas aprovadas.
+                </p>
+                <Accordion type="multiple" className="mt-4">
                   {relatorioEixos.map((eixo) => (
-                    <div key={eixo.numero} className="border-l-2 border-secondary/60 pl-4">
-                      <h4 className="font-display font-bold text-foreground">
-                        <span className="text-secondary">{eixo.numero}</span> {eixo.titulo}
-                      </h4>
-                      <div className="mt-3 space-y-3 text-justify leading-relaxed text-muted-foreground">
-                        {eixo.sintese.map((par, i) => (
-                          <p key={`${eixo.numero}-sin-${i}`}>{par}</p>
-                        ))}
-                      </div>
-
-                      {eixo.propostas.length > 0 ? (
-                        <div className="mt-4">
-                          <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
-                            Propostas aprovadas
-                          </p>
-                          <ul className="mt-3 space-y-2">
-                            {eixo.propostas.map((prop, i) => (
-                              <li key={`${eixo.numero}-prop-${i}`} className="flex gap-2">
-                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
-                                <span className="leading-relaxed text-muted-foreground">{prop}</span>
-                              </li>
-                            ))}
-                          </ul>
+                    <AccordionItem key={eixo.numero} value={eixo.numero}>
+                      <AccordionTrigger className="text-left hover:no-underline">
+                        <span className="font-display font-bold text-foreground">
+                          <span className="text-secondary">{eixo.numero}</span> {eixo.titulo}
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-3 text-justify text-sm leading-relaxed text-muted-foreground">
+                          {eixo.sintese.map((par, i) => (
+                            <p key={`${eixo.numero}-sin-${i}`}>{par}</p>
+                          ))}
                         </div>
-                      ) : (
-                        eixo.semPropostas && (
-                          <p className="mt-4 text-sm italic text-muted-foreground">
-                            {eixo.semPropostas}
-                          </p>
-                        )
-                      )}
-                    </div>
+
+                        {eixo.propostas.length > 0 ? (
+                          <div className="mt-4 rounded-2xl bg-muted p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-secondary">
+                              Propostas aprovadas
+                            </p>
+                            <ul className="mt-3 space-y-2">
+                              {eixo.propostas.map((prop, i) => (
+                                <li key={`${eixo.numero}-prop-${i}`} className="flex gap-2">
+                                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+                                  <span className="leading-relaxed text-muted-foreground">
+                                    {prop}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          eixo.semPropostas && (
+                            <p className="mt-4 text-sm italic text-muted-foreground">
+                              {eixo.semPropostas}
+                            </p>
+                          )
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </div>
+                </Accordion>
               </div>
 
               <div className="mt-10">
@@ -807,24 +765,36 @@ const SimposioBrasilia = () => {
                 ))}
               </div>
 
-              {cartaEixos.map((eixo) => (
-                <div key={eixo.titulo} className="mt-10">
-                  <h3 className="font-display text-lg font-bold text-primary">{eixo.titulo}</h3>
-                  <div className="mt-4 space-y-5">
-                    {eixo.propostas.map((prop) => (
-                      <div
-                        key={prop.nome}
-                        className="border-l-2 border-secondary/60 pl-4"
-                      >
-                        <h4 className="font-semibold text-foreground">{prop.nome}</h4>
-                        <p className="mt-1 text-justify leading-relaxed text-muted-foreground">
-                          {prop.texto}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              <div className="mt-10">
+                <h3 className="font-display text-lg font-bold text-primary">
+                  Eixos temáticos e proposições
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  As deliberações da Carta estão organizadas em sete eixos. Toque em cada um para ler
+                  as propostas.
+                </p>
+                <Accordion type="multiple" className="mt-4">
+                  {cartaEixos.map((eixo) => (
+                    <AccordionItem key={eixo.titulo} value={eixo.titulo}>
+                      <AccordionTrigger className="text-left hover:no-underline">
+                        <span className="font-display font-bold text-primary">{eixo.titulo}</span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-5">
+                          {eixo.propostas.map((prop) => (
+                            <div key={prop.nome} className="border-l-2 border-secondary/60 pl-4">
+                              <h4 className="font-semibold text-foreground">{prop.nome}</h4>
+                              <p className="mt-1 text-justify text-sm leading-relaxed text-muted-foreground">
+                                {prop.texto}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
 
               <div className="mt-10">
                 <h3 className="font-display text-lg font-bold text-primary">
