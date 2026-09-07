@@ -14,6 +14,8 @@ import {
   MapPinned,
   UsersRound,
   Camera,
+  ClipboardList,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GaleriaSimposio from "@/components/GaleriaSimposio";
@@ -38,8 +40,18 @@ import {
   cartaLocalData,
   cartaAssinatura,
 } from "@/data/cartaBrasilia2026";
+import {
+  relatorioIntro,
+  relatorioApresentacao,
+  relatorioEixos,
+  relatorioConsideracoes,
+  relatorioLocalData,
+  relatorioAssinatura,
+} from "@/data/relatorioPlenariaFinal";
 
 const MANUAL_URL = "/documentos/manual-do-participante-iii-simposio.pdf";
+const CARTA_URL = "/documentos/carta-de-brasilia-2026.pdf";
+const RELATORIO_URL = "/documentos/relatorio-plenaria-final-iii-simposio.pdf";
 
 const numeros = [
   { valor: "3", rotulo: "dias de programação", icon: CalendarDays },
@@ -291,6 +303,17 @@ const SimposioBrasilia = () => {
                   <a href="#carta">
                     <ScrollText className="h-4 w-4" />
                     Ler a Carta de Brasília
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+                >
+                  <a href="#relatorio">
+                    <ClipboardList className="h-4 w-4" />
+                    Relatório da Plenária
                   </a>
                 </Button>
                 <Button
@@ -638,6 +661,116 @@ const SimposioBrasilia = () => {
         </div>
       </section>
 
+      {/* Relatório da Plenária Final */}
+      <section id="relatorio" className="bg-background py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 text-secondary">
+              <ClipboardList className="h-6 w-6" />
+              <span className="text-sm uppercase tracking-[0.3em]">Registro consolidado</span>
+            </div>
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-bold text-foreground">
+              Relatório da Plenária Final
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              Sistematização das sínteses dos seis eixos temáticos e das propostas aprovadas no III
+              Simpósio Nacional de Quadrilhas Juninas. As propostas de políticas públicas foram
+              incorporadas à Carta de Brasília 2026; as demais seguem para deliberação das entidades
+              filiadas e da CONFEBRAQ.
+            </p>
+            <div className="mt-8">
+              <Button asChild size="lg">
+                <a href={RELATORIO_URL} target="_blank" rel="noopener noreferrer">
+                  <Download className="h-4 w-4" />
+                  Baixar o Relatório (PDF)
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          {/* Documento */}
+          <article className="mt-10 overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
+            <div className="h-2" style={juninaStrip} />
+            <div className="p-6 sm:p-10">
+              <div className="space-y-4 text-justify leading-relaxed text-muted-foreground">
+                {relatorioIntro.map((par, i) => (
+                  <p key={`rel-intro-${i}`}>{par}</p>
+                ))}
+              </div>
+
+              <div className="mt-10">
+                <h3 className="font-display text-lg font-bold text-primary">1. Apresentação</h3>
+                <div className="mt-4 space-y-4 text-justify leading-relaxed text-muted-foreground">
+                  {relatorioApresentacao.map((par, i) => (
+                    <p key={`rel-apres-${i}`}>{par}</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <h3 className="font-display text-lg font-bold text-primary">
+                  2. Eixos temáticos e sínteses
+                </h3>
+                <div className="mt-6 space-y-8">
+                  {relatorioEixos.map((eixo) => (
+                    <div key={eixo.numero} className="border-l-2 border-secondary/60 pl-4">
+                      <h4 className="font-display font-bold text-foreground">
+                        <span className="text-secondary">{eixo.numero}</span> {eixo.titulo}
+                      </h4>
+                      <div className="mt-3 space-y-3 text-justify leading-relaxed text-muted-foreground">
+                        {eixo.sintese.map((par, i) => (
+                          <p key={`${eixo.numero}-sin-${i}`}>{par}</p>
+                        ))}
+                      </div>
+
+                      {eixo.propostas.length > 0 ? (
+                        <div className="mt-4">
+                          <p className="text-sm font-semibold uppercase tracking-wide text-secondary">
+                            Propostas aprovadas
+                          </p>
+                          <ul className="mt-3 space-y-2">
+                            {eixo.propostas.map((prop, i) => (
+                              <li key={`${eixo.numero}-prop-${i}`} className="flex gap-2">
+                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
+                                <span className="leading-relaxed text-muted-foreground">{prop}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        eixo.semPropostas && (
+                          <p className="mt-4 text-sm italic text-muted-foreground">
+                            {eixo.semPropostas}
+                          </p>
+                        )
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <h3 className="font-display text-lg font-bold text-primary">
+                  3. Considerações finais
+                </h3>
+                <div className="mt-4 space-y-4 text-justify leading-relaxed text-muted-foreground">
+                  {relatorioConsideracoes.map((par, i) => (
+                    <p key={`rel-final-${i}`}>{par}</p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-10 border-t border-border pt-6 text-center">
+                <p className="font-semibold text-foreground">{relatorioLocalData}</p>
+                <p className="mt-1 text-sm uppercase tracking-widest text-secondary">
+                  {relatorioAssinatura}
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
       {/* Carta de Brasília 2026 */}
       <section id="carta" className="bg-primary py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -652,8 +785,16 @@ const SimposioBrasilia = () => {
             <p className="mx-auto mt-4 max-w-2xl text-primary-foreground/80">
               Deliberações e proposições aprovadas coletivamente na Plenária Final do III Simpósio
               Nacional de Quadrilhas Juninas, em 22 de agosto de 2026, dirigidas ao poder público
-              como agenda permanente de políticas para o movimento junino.
+              como agenda permanente de políticas para o Movimento Junino.
             </p>
+            <div className="mt-8">
+              <Button asChild size="lg" variant="secondary">
+                <a href={CARTA_URL} target="_blank" rel="noopener noreferrer">
+                  <Download className="h-4 w-4" />
+                  Baixar a Carta (PDF)
+                </a>
+              </Button>
+            </div>
           </div>
 
           {/* Documento */}
